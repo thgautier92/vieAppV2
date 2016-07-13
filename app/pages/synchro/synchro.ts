@@ -14,7 +14,7 @@ declare var PouchDB: any;
 */
 @Component({
   templateUrl: 'build/pages/synchro/synchro.html',
-  providers:[DisplayTools, CouchDbServices]
+  providers: [DisplayTools, CouchDbServices]
 })
 export class SynchroPage {
   platform: any;
@@ -22,7 +22,7 @@ export class SynchroPage {
   userData: any;
   db: any;
   remoteCouch: any;
-  sync: any;
+  sync: any={};
   syncExec: any;
   docs: any;
   params: any;
@@ -31,20 +31,23 @@ export class SynchroPage {
     this.platform = platform;
     this.display = display;
     this.params = couch.getParams();
+    console.log(this.params);
     this.couch.verifSession(true).then(response => {
       console.log(response);
       this.userData = response;
-      this.params['base'] = this.userData['name'];
+      this.params['base'] = this.userData['name'].toLowerCase();
+      this.loadBase(this.params);
     }, error => {
       console.log(error);
       this.userData = null;
       this.display.displayToast("Veuillez vous identifier ! Mode démo activé");
+      this.loadBase(this.params);
     });
     this.docs = [];
-    this.loadBase(this.params);
   }
 
   loadBase(params) {
+    console.log(params);
     this.sync = { "start": false, "info": false, "error": false, "stats": false, "timer": false };
     this.display.displayLoading("Activation de la base " + params.base, 1);
     this.db = new PouchDB(params.base);
@@ -116,7 +119,7 @@ export class SynchroPage {
     this.db.destroy().then(function (response) {
       console.log("Del DB", response);
       me.display.displayToast("Base effacée en local.");
-      this.loadBase();
+      me.loadBase(this.params);
     }).catch(function (err) {
       console.log(err);
     });

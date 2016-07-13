@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import {DisplayTools} from '../comon/display';
+import {StartPage} from '../start/start';
 
 /*
   Generated class for the HomePage page.
@@ -9,7 +11,19 @@ import { NavController } from 'ionic-angular';
 */
 @Component({
   templateUrl: 'build/pages/home/home.html',
+  providers: [DisplayTools]
 })
 export class HomePage {
-  constructor(private nav: NavController) {}
+  items: any;
+  display: any;
+  constructor(public nav: NavController, display: DisplayTools) {
+    this.nav = nav;
+    this.display = display;
+    this.items = [
+      { 'title': 'Start', 'icon': 'regime_retraite_complementaire.jpg', 'description': "Démarrer un RDV", 'link': StartPage, 'color': this.display.getRandomColor() },
+    ]
+  }
+  openNavDetailsPage(item) {
+    this.nav.push(item.link);
+  }
 }

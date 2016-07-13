@@ -1,0 +1,9 @@
+.start {
+
+}
+ion-card.cards-list-start ion-card-header {
+  color: map-get($colors, primary);
+}
+.rdv {
+  color: map-get($colors, danger);
+}

@@ -7,3 +7,21 @@
 .toolbar-background {
         background: transparent;
 }
+.small{
+    font-size:9px;
+}
+.xsmall{
+    font-size:7px;
+}
+.wrap{
+    word-wrap: break-word;
+}
+.actionButton{
+    position:fixed;
+    bottom: 50px;
+}
+.swiper-slide {
+    overflow-y: scroll;
+    display: block;
+    max-height: 92%;
+}
