@@ -26,7 +26,7 @@ export class RdvPage {
   currentRdv: any = {};
   lstCli: any = [];
   rdvId: any;
-  dataMenu:any;
+  dataMenu: any;
   constructor(private platform: Platform, nav: NavController, navParams: NavParams,
     private display: DisplayTools, private couch: CouchDbServices,
     private paramsApi: Paramsdata, fb: FormBuilder) {
@@ -48,11 +48,29 @@ export class RdvPage {
     this.getRdv(this.rdvId);
   }
   getRdv(id) {
-    let me=this;
+    let me = this;
     this.db.get(id).then(function (doc) {
       console.log(doc);
-      me.currentRdv = doc;
-      me.lstCli = doc.clients;
+      this.currentRdv = doc;
+      this.currentRdv.rdv['result'] = [];
+      for (var idx in doc.clients) {
+        let cli=doc.clients[idx]
+        this.currentRdv.rdv['result'].push({
+          clientId: cli['client']['output'][0]['REF'],
+          clientName: cli['client']['output'][0]['NOM'],
+          clientPrenom: cli['client']['output'][0]['PRENOM'],
+          etatVie:cli['client']['output'][0]['ETATVIE'],
+          rdvStatus: false
+        });
+      }
+      this.lstCli = this.currentRdv.rdv.result;
+      console.log(this.currentRdv);
     });
+  }
+  start(idx){
+    console.log(idx);
+    this.currentRdv.rdv.result[idx]['rdvStatus']=true;
+
+
   }
 }

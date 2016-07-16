@@ -11,16 +11,17 @@
 <ion-content padding class="rdv">
   <h3>Liste des dossiers du RDV</h3>
   <ion-list>
-    <ion-item *ngFor="let cli of lstCli" [ngClass]="{
-                      'soc' : cli.client.output[0].ETATVIE=='SOCIETAIRE',
-                      'prosp' : cli.client.output[0].ETATVIE=='PROSPECT'}">
-      <h5>#{{cli.client.output[0].REF}} {{cli.client.output[0].NOM}} <span *ngIf="cli.client.output[0].PRENOM!=='null'">{{cli.client.output[0].PRENOM}}</span></h5>
-    </ion-item>
+    <button ion-item *ngFor="let cli of lstCli" (click)="start($index)" [ngClass]="{
+                      'soc' : cli.etatVie=='SOCIETAIRE',
+                      'prosp' : cli.etatVie=='PROSPECT'}">
+      <ion-icon *ngIf="cli.rdvStatus" item-right name="logo-tux"></ion-icon>
+      <h5>#{{cli.clientId}} {{cli.clientName}} <span *ngIf="cli.clientPrenom!=='null'">{{cli.clientPrenom}}</span></h5>
+    </button>
   </ion-list>
   <ion-list>
     <button ion-item *ngFor="let item of dataMenu | objToArray" (click)="itemTapped(item)">
       <ion-icon [name]="item.value.icon" [ngStyle]="{'color': item.value.color}" item-left></ion-icon>
-      <h5>{{item.value.lib}} {{item.value.status}}</h5>
+      <h5>{{item.value.lib}}</h5>
       <ion-icon item-right name="checkbox" [ngClass]="{
           'Completed': item.value.status == 'Completed',
           'Hold': item.value.status == 'Hold' , 

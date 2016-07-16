@@ -1,7 +1,15 @@
 .rdv {
 
 }
-.Completed {}
-.Hold {} 
-.Started {} 
-.Pending {}
+.Hold {
+    color:red;
+}
+.Completed {
+    color:green;
+}
+.Started{
+    color:blue;
+}
+.Pending{
+    color:orange;
+}
