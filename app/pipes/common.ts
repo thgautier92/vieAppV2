@@ -33,13 +33,15 @@ export class binaryData {
 }
 @Pipe({ name: 'groupBy' })
 export class groupBy implements PipeTransform {
-  transform(collection: any, getter: any,subgetter?:any): any {
+  transform(collection: any, getter: any, subgetter?: any, ssubgetter?: any,sub?:number): any {
     var result = {};
     var prop;
     for (var elm in collection) {
       prop = collection[elm][getter];
-      if(subgetter) prop=prop[subgetter];
-      //console.log("GROUP BY:",collection,elm,getter,prop);
+      if (subgetter) prop = prop[subgetter];
+      if (ssubgetter) prop = prop[ssubgetter];
+      if (sub) prop=prop.substring(0,sub);
+      console.log("GROUP BY:", collection, elm, getter, prop);
       if (!result[prop]) {
         result[prop] = [];
       }
@@ -56,5 +58,17 @@ export class KeysPipe implements PipeTransform {
       keys.push({ key: key, value: value[key] });
     }
     return keys;
+  }
+}
+@Pipe({ name: 'textToDate' })
+export class textToDate implements PipeTransform {
+  transform(value): any {
+    // 2016-07-14 02:23:03
+    let ret = {};
+    let d = (value.substring(0, 10));
+    let t = (value.substring(11, 20));
+    ret = { "date": d, "time": t };
+    console.log(ret);
+    return ret;
   }
 }

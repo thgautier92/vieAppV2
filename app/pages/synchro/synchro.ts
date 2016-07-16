@@ -119,7 +119,7 @@ export class SynchroPage {
     this.db.destroy().then(function (response) {
       console.log("Del DB", response);
       me.display.displayToast("Base effacée en local.");
-      me.loadBase(this.params);
+      me.loadBase(me.params);
     }).catch(function (err) {
       console.log(err);
     });

@@ -5,5 +5,11 @@ ion-card.cards-list-start ion-card-header {
   color: map-get($colors, primary);
 }
 .rdv {
-  color: map-get($colors, danger);
+  color: map-get($colors, rdv);
+}
+.prosp{
+  border-left: 6px solid map-get($colors, primary);
+}
+.soc{
+  border-left: 6px solid map-get($colors, secondary);
 }

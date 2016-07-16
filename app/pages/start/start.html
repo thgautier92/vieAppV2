@@ -14,27 +14,41 @@
 </ion-navbar>
 
 <ion-content padding class="start">
-  <ion-card class="cards-list-start">
-    <ion-card-header>Vos Rendez-vous</ion-card-header>
+  <ion-card class="cards-list-start" *ngFor="let key of docs | keys">
+    <ion-card-header>Vos Rendez-vous du {{key.key}}</ion-card-header>
     <ion-list>
-      <button ion-item *ngFor="let item of docs.rows">
-        <h4>Rendez-vous #{{item.id}}, le {{item.doc.rdv.dateRdv}}</h4>
-        <h3 class="rdv">
-          <b text-primary>{{item.doc.rdv.NOM}}</b>
-          <br>{{item.doc.rdv.CODEPOSTAL}} {{item.doc.rdv.VILLE}}
-          <br>{{item.doc.rdv.TELEPHONE}}
-        </h3>
-        <ion-list>
-          <ion-item *ngFor="let cli of item.doc.clients">
-            <h5>#{{cli.client.output[0].REF}} {{cli.client.output[0].NOM}} <span *ngIf="cli.client.output[0].PRENOM">{{cli.client.output[0].PRENOM}}</span></h5>
-            <!--
-            <h6>{{cli.contrats.output.length}} contrats</h6>
-            <h6>{{cli.affaires.output.length}} affaires</h6>
-            <h6>{{cli.souscriptions.output.length}} souscriptions</h6>
-            <h6>{{cli.documents.output.length}} documents</h6>
-            -->
-          </ion-item>
-        </ion-list>
+      <button ion-item *ngFor="let item of key.value" [ngClass]="{
+                  'soc' : item.doc.rdv.ETATVIE=='SOCIETAIRE',
+                  'prosp' : item.doc.rdv.ETATVIE=='PROSPECT'}" (click)="start(item)">
+        <ion-icon name="flag" item-right primary></ion-icon>
+        <ion-row>
+          <ion-col width-90 ><h3>Rendez-vous à <b>{{(item.doc.rdv.dateRdv |textToDate).time}}</b></h3></ion-col>
+          <ion-col width-10 text-right class="small">#{{item.id}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col width-50 text-wrap>
+            <h3 class="rdv">
+              <b text-primary>{{item.doc.rdv.NOM}}</b>
+              <br>{{item.doc.rdv.CODEPOSTAL}} {{item.doc.rdv.VILLE}}
+              <br><a href="tel:{{item.doc.rdv.TELEPHONE}}"><ion-icon name="call"></ion-icon> {{item.doc.rdv.TELEPHONE}}</a>
+            </h3>
+          </ion-col>
+          <ion-col width-50>
+            <ion-list>
+              <ion-item *ngFor="let cli of item.doc.clients" [ngClass]="{
+                      'soc' : cli.client.output[0].ETATVIE=='SOCIETAIRE',
+                      'prosp' : cli.client.output[0].ETATVIE=='PROSPECT'}">
+                <h5>#{{cli.client.output[0].REF}} {{cli.client.output[0].NOM}} <span *ngIf="cli.client.output[0].PRENOM!=='null'">{{cli.client.output[0].PRENOM}}</span></h5>
+                <!--
+                <h6>{{cli.contrats.output.length}} contrats</h6>
+                <h6>{{cli.affaires.output.length}} affaires</h6>
+                <h6>{{cli.souscriptions.output.length}} souscriptions</h6>
+                <h6>{{cli.documents.output.length}} documents</h6>
+                -->
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
       </button>
     </ion-list>
   </ion-card>

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import {Page, Loading, Modal, Platform, NavController, NavParams, ViewController,
   Storage, SqlStorage, LocalStorage} from 'ionic-angular';
+import {groupBy, ValuesPipe, KeysPipe,textToDate} from '../../pipes/common';
 import { CouchDbServices } from '../../providers/couch/couch';
 import {DisplayTools} from '../comon/display';
+import { RdvPage } from '../rdv/rdv';
 
 declare var PouchDB: any;
 /*
@@ -13,7 +15,8 @@ declare var PouchDB: any;
 */
 @Component({
   templateUrl: 'build/pages/start/start.html',
-  providers: [CouchDbServices, DisplayTools]
+  providers: [CouchDbServices, DisplayTools],
+  pipes: [groupBy, ValuesPipe, KeysPipe,textToDate]
 })
 export class StartPage {
   platform: any;
@@ -55,7 +58,15 @@ export class StartPage {
     let me = this;
     me.docs = [];
     this.db.allDocs({ include_docs: true, descending: true }, function (err, data) {
-      me.docs = data;
+      console.log(data);
+      me.docs = new groupBy().transform(data.rows, 'doc','rdv','dateRdv',10);
+      console.log(me.docs);
     });
   };
+  start(item){
+    // start the RDV with data
+    console.log(item);
+    this.nav.push(RdvPage,{base:this.base,rdvId:item.id});
+
+  }
 }
