@@ -8,6 +8,9 @@ import { CouchDbServices } from '../../providers/couch/couch';
 import {Paramsdata} from '../../providers/params-data/params-data';
 import {DisplayTools} from '../comon/display';
 
+import * as DiagConseil from './diag-conseil/diag-conseil';
+
+
 declare var PouchDB: any;
 /*
   Generated class for the RdvPage page.
@@ -27,7 +30,7 @@ export class RdvPage {
   lstCli: any = [];
   rdvId: any;
   dataMenu: any;
-  constructor(private platform: Platform, nav: NavController, navParams: NavParams,
+  constructor(private platform: Platform, private nav: NavController, navParams: NavParams,
     private display: DisplayTools, private couch: CouchDbServices,
     private paramsApi: Paramsdata, fb: FormBuilder) {
     this.platform = platform;
@@ -51,11 +54,11 @@ export class RdvPage {
     let me = this;
     this.db.get(id).then(function (doc) {
       console.log(doc);
-      this.currentRdv = doc;
-      this.currentRdv.rdv['result'] = [];
+      me.currentRdv = doc;
+      me.currentRdv.rdv['result'] = [];
       for (var idx in doc.clients) {
         let cli=doc.clients[idx]
-        this.currentRdv.rdv['result'].push({
+        me.currentRdv.rdv['result'].push({
           clientId: cli['client']['output'][0]['REF'],
           clientName: cli['client']['output'][0]['NOM'],
           clientPrenom: cli['client']['output'][0]['PRENOM'],
@@ -63,14 +66,22 @@ export class RdvPage {
           rdvStatus: false
         });
       }
-      this.lstCli = this.currentRdv.rdv.result;
-      console.log(this.currentRdv);
+      me.lstCli = me.currentRdv.rdv.result;
+      console.log(me.currentRdv);
     });
   }
-  start(idx){
-    console.log(idx);
-    this.currentRdv.rdv.result[idx]['rdvStatus']=true;
-
+  start(cli){
+    console.log(cli);
+    //this.currentRdv.rdv.result[idx]['rdvStatus']=true;
+    /*
+    this.nav.push(DiagConseil,{"idMenu":1,"dataIn":null}).then(data=>{
+      console.log("Data return from form",data);
+    });
+    */
+    let d={"nom":"toto"};
+    this.nav.push(DiagConseil,{"idMenu":1,"dataIn":d}).then(data=>{
+      console.log("Data return from form",data);
+    });
 
   }
 }
