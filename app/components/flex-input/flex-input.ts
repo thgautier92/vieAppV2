@@ -1,8 +1,7 @@
 import { Component, ViewChild, ElementRef, Input, Output, AfterViewInit, OnChanges} from '@angular/core';
 import {IONIC_DIRECTIVES} from 'ionic-angular';
-import { FORM_DIRECTIVES, NgForm, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
+import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
-import {Http} from '@angular/http';
 import {groupBy, ValuesPipe, KeysPipe} from '../../pipes/common';
 import {Paramsdata} from '../../providers/params-data/params-data';
 
@@ -18,19 +17,27 @@ import {Paramsdata} from '../../providers/params-data/params-data';
   inputs: ['idMenu', 'dataIn'],
   outputs: ['dataOut'],
   directives: [IONIC_DIRECTIVES, FORM_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault],
-  pipes: [groupBy, ValuesPipe, KeysPipe]
+  pipes: [groupBy, ValuesPipe, KeysPipe],
+  providers: [Paramsdata]
 })
 export class FlexInput implements AfterViewInit, OnChanges {
+  menuCurrent: any = {};
   form: any;
   selectedForm: any;
   selectedFields: any;
   @Input() idMenu: any;
   @Input() dataIn: any;
-  @Output() dataOut: any;
   constructor(private fb: FormBuilder, private paramsApi: Paramsdata) {
-
+    this.form = this.fb.group({});
   }
   ngAfterViewInit() {
+    console.log("Data passed to component : ");
+    console.log(this.dataIn);
+    // Get Info about menu
+    this.paramsApi.loadMenu().then(menu => {
+      console.log("Menu", menu);
+      this.menuCurrent = menu[this.idMenu-1];
+    });
     this.paramsApi.getForm(this.idMenu, this.dataIn).then(data => {
       console.log("== Return form data ", this.idMenu, data);
       this.form = data['formGroup'];

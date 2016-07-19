@@ -9,6 +9,7 @@ import {Paramsdata} from '../../providers/params-data/params-data';
 import {DisplayTools} from '../comon/display';
 
 import * as DiagConseil from './diag-conseil/diag-conseil';
+import {StartPage} from '../start/start';
 
 
 declare var PouchDB: any;
@@ -70,18 +71,14 @@ export class RdvPage {
       console.log(me.currentRdv);
     });
   }
-  start(cli){
-    console.log(cli);
-    //this.currentRdv.rdv.result[idx]['rdvStatus']=true;
-    /*
-    this.nav.push(DiagConseil,{"idMenu":1,"dataIn":null}).then(data=>{
+  start(idx){
+    console.log(idx);
+    let d=this.currentRdv.clients[idx];
+    console.log("Data client",d);
+    this.nav.push(DiagConseil.DiagConseilPage,{"idMenu":1,"dataIn":d}).then(data=>{
       console.log("Data return from form",data);
     });
-    */
-    let d={"nom":"toto"};
-    this.nav.push(DiagConseil,{"idMenu":1,"dataIn":d}).then(data=>{
-      console.log("Data return from form",data);
-    });
+
 
   }
 }

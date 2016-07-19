@@ -11,7 +11,7 @@
 <ion-content padding class="rdv">
   <h3>Liste des dossiers du RDV</h3>
   <ion-list>
-    <button ion-item *ngFor="let cli of lstCli" (click)="start(cli)" [ngClass]="{
+    <button ion-item *ngFor="let cli of lstCli;let i = index" (click)="start(i)" [ngClass]="{
                       'soc' : cli.etatVie=='SOCIETAIRE',
                       'prosp' : cli.etatVie=='PROSPECT'}">
       <ion-icon *ngIf="cli.rdvStatus" item-right name="logo-tux"></ion-icon>

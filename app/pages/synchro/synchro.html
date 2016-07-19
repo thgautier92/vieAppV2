@@ -6,13 +6,13 @@
 -->
 <ion-navbar *navbar>
   <ion-title>Synchronisation</ion-title>
-    <button menuToggle>
+  <button menuToggle>
     <ion-icon name="menu"></ion-icon>
   </button>
 </ion-navbar>
 
 <ion-content padding class="synchro">
-  
+
   <button primary (click)="startSync()">Synchroniser {{params.base}}</button>
   <button primary (click)="delDb()">Effacer</button>
   <button class="actionButton" fab fab-right fab-bottom favorite (click)="showBase()"><ion-icon name="refresh"></ion-icon></button>
@@ -33,8 +33,10 @@
         </button>
       </ion-item>
       <ion-item *ngIf="sync['start']">
-        <p class="small wrap" favorite *ngIf="sync['info']">Action de <mark>{{sync['info']['direction']}}</mark>, le {{sync['info']['change']['start_time']}} :<br>{{sync['info']['change']['docs_read']}}
-          lectures,{{sync['info']['change']['docs_written']}} écritures, {{sync['info']['change']['doc_write_failures']}} erreurs</p>
+        <p class="small wrap" favorite *ngIf="sync['info']">Action de
+          <mark>{{sync['info']['direction']}}</mark>, le {{sync['info']['change']['start_time']}} :<br>{{sync['info']['change']['docs_read']}}
+          lectures,{{sync['info']['change']['docs_written']}} écritures, {{sync['info']['change']['doc_write_failures']}}
+          erreurs</p>
         <p class="small wrap" danger *ngIf="sync['info']">Problème de synchronisation : {{sync['info']}}</p>
       </ion-item>
     </ion-card-content>

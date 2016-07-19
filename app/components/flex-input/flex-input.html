@@ -11,8 +11,8 @@
         <ion-card>
           <ion-card-header>{{key.key}}</ion-card-header>
           <ion-list>
-            <ion-item *ngFor="let field of key.value"> 
-                <ion-icon item-left class="fieldIcon" [ngClass]="{
+            <ion-item *ngFor="let field of key.value">
+              <ion-icon item-left class="fieldIcon" [ngClass]="{
                   'ion-md-list' : field.type=='enum',
                   'ion-md-calendar' : field.type=='date',
                   'ion-md-text' : field.type=='text',
@@ -21,8 +21,8 @@
                   'ion-md-mail' : field.type=='email',
                   'ion-md-wifi' : field.type=='url',
                   'ion-md-cloud-upload' : field.type=='urlData'}" (click)="initField(item.model)">
-                </ion-icon>
-                <ion-label stacked>{{field.title}}</ion-label>
+              </ion-icon>
+              <ion-label stacked>{{field.title}}</ion-label>
               <ion-input *ngIf="field.type=='number'" type="number" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"
                 min="{{field.enum[0]}}" max="{{field.enum[1]}}"></ion-input>
               <ion-input *ngIf="field.type=='text'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
@@ -37,12 +37,12 @@
               <button *ngIf="field.type=='urlData'" ng-click="openSimuData($index,item.model,item.default)"><ion-icon name="connection-bars"></ion-icon> {{field.title}}</button>
 
               <ion-toggle *ngIf="field.type=='boolean'" checked="false" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"></ion-toggle>
-              
+
               <ion-select *ngIf="field.type=='enum'" [(ngModel)]="field.value" [ngControl]="field.model" cancelText="Annuler" okText="Ok">
                 <ion-option value="">== Choisir une option ==</ion-option>
                 <ion-option *ngFor="let b of field.enum | objToArray" [value]="b.key">{{b.value}}</ion-option>
               </ion-select>
-              <div class="errorMessage" *ngIf="isValid(field.model)">{{field.title}} is required</div> -->
+              <!-- <div class="errorMessage" *ngIf="isValid(field.model)">{{field.title}} is required</div> -->
             </ion-item>
           </ion-list>
         </ion-card>

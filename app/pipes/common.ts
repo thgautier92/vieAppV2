@@ -41,7 +41,7 @@ export class groupBy implements PipeTransform {
       if (subgetter) prop = prop[subgetter];
       if (ssubgetter) prop = prop[ssubgetter];
       if (sub) prop=prop.substring(0,sub);
-      console.log("GROUP BY:", collection, elm, getter, prop);
+      //console.log("GROUP BY:", collection, elm, getter, prop);
       if (!result[prop]) {
         result[prop] = [];
       }
