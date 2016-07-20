@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { Platform, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Platform, NavController, NavParams, Tabs } from 'ionic-angular';
 import { FORM_DIRECTIVES,
   NgForm, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
 import {groupBy, ValuesPipe, KeysPipe, textToDate} from '../../pipes/common';
-import { CouchDbServices } from '../../providers/couch/couch';
+import {CouchDbServices} from '../../providers/couch/couch';
 import {Paramsdata} from '../../providers/params-data/params-data';
 import {DisplayTools} from '../comon/display';
 
-import * as DiagConseil from './diag-conseil/diag-conseil';
+import {DiagConseilPage} from './diag-conseil/diag-conseil';
+import {DecouvertePage} from './decouverte/decouverte';
 import {StartPage} from '../start/start';
-
 
 declare var PouchDB: any;
 /*
@@ -25,9 +25,11 @@ declare var PouchDB: any;
   pipes: [groupBy, ValuesPipe, KeysPipe, textToDate]
 })
 export class RdvPage {
+  @ViewChild('rdvTabs') rdvTabs: any;
   db: any;
   base: any;
   currentRdv: any = {};
+  currentCli: any = null;
   lstCli: any = [];
   rdvId: any;
   dataMenu: any;
@@ -38,15 +40,10 @@ export class RdvPage {
     this.base = navParams.get("base");
     this.rdvId = navParams.get("rdvId");
     this.db = new PouchDB(this.base);
-    // Load Menu forms
-    this.paramsApi.loadMenu().then((result) => {
-      //console.log("Forms params:", result);
-      this.dataMenu = result;
-      //this.paramsApi.initDataForms();
-    }, (error) => {
-      console.log("Error", error);
-      this.dataMenu = null;
-    });
+    this.dataMenu = [
+      { "id": 1, "status": "Hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage, "form": 1 },
+      { "id": 2, "status": "Hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage, "form": 2 },
+    ]
   }
   ngAfterViewInit() {
     this.getRdv(this.rdvId);
@@ -54,31 +51,36 @@ export class RdvPage {
   getRdv(id) {
     let me = this;
     this.db.get(id).then(function (doc) {
-      console.log(doc);
+      //console.log(doc);
       me.currentRdv = doc;
+      // Create JSON Structure for data input by application
       me.currentRdv.rdv['result'] = [];
       for (var idx in doc.clients) {
-        let cli=doc.clients[idx]
+        let cli = doc.clients[idx]
         me.currentRdv.rdv['result'].push({
           clientId: cli['client']['output'][0]['REF'],
           clientName: cli['client']['output'][0]['NOM'],
           clientPrenom: cli['client']['output'][0]['PRENOM'],
-          etatVie:cli['client']['output'][0]['ETATVIE'],
+          etatVie: cli['client']['output'][0]['ETATVIE'],
           rdvStatus: false
         });
       }
       me.lstCli = me.currentRdv.rdv.result;
-      console.log(me.currentRdv);
+      //console.log("Current RDV", me.currentRdv);
+    }).catch(function (error) {
+      console.error(error);
     });
   }
-  start(idx){
-    console.log(idx);
-    let d=this.currentRdv.clients[idx];
-    console.log("Data client",d);
-    this.nav.push(DiagConseil.DiagConseilPage,{"idMenu":1,"dataIn":d}).then(data=>{
-      console.log("Data return from form",data);
+  start(idx) {
+    this.currentCli = this.currentRdv.clients[idx];
+    console.log("Data client", this.currentCli);
+    console.log("Tabs ", this.rdvTabs);
+    /*this.nav.push(DiagConseilPage, { "idMenu": 1, "dataIn": this.currentCli }).then(data => {
+      console.log("Data return from form", data);
     });
-
-
+    */
+  }
+  retrieveData() {
+    return this.currentCli;
   }
 }

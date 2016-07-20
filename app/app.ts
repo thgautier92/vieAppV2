@@ -44,7 +44,6 @@ class MyApp {
   };
   verif() {
     this.couch.verifSession(true).then(response => {
-      console.log(response);
       this.userData = response;
       this.isAut = true;
       this.nav.setRoot(HomePage);

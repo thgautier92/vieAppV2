@@ -31,21 +31,20 @@ export class FlexInput implements AfterViewInit, OnChanges {
     this.form = this.fb.group({});
   }
   ngAfterViewInit() {
-    console.log("Data passed to component : ");
-    console.log(this.dataIn);
+    console.log("!! Data passed to component : ",this.dataIn);
     // Get Info about menu
     this.paramsApi.loadMenu().then(menu => {
-      console.log("Menu", menu);
+      //console.log("Menu", menu);
       this.menuCurrent = menu[this.idMenu-1];
     });
     this.paramsApi.getForm(this.idMenu, this.dataIn).then(data => {
-      console.log("== Return form data ", this.idMenu, data);
+      //console.log("== Return form data ", this.idMenu, data);
       this.form = data['formGroup'];
       this.selectedForm = data['form'];
       // Group fields array
       this.selectedFields = new groupBy().transform(this.selectedForm['fields'], 'group');
       //this.selectedMenu.status = "Started";
-      console.log("Display form", this.selectedForm, this.form, this.selectedFields)
+      //console.log("Display form", this.selectedForm, this.form, this.selectedFields)
     }, error => {
       console.error("Impossible de lire le formulaire", this.idMenu);
       console.error(error);

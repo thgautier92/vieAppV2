@@ -17,10 +17,17 @@ import {FlexInput} from '../../../components/flex-input/flex-input'
 export class DiagConseilPage {
   dataIn: any = {};
   dataOut: any = {};
-  idMenu: any;
-  constructor(private nav: NavController, private params:NavParams) {
-    this.idMenu = this.params.get('idMenu');
-    this.dataIn = this.params.get('dataIn');
+  params:NavParams;
+  constructor(private nav: NavController, params:NavParams) {
+    this.params = params;
+    this.dataIn = this.params.data;
     this.dataOut={};
+  }
+  ngAfterViewInit() {
+    console.log("DIAG afterViewInit",this.dataIn);
+  };
+  ngOnChanges(changes: any) {
+    console.log("DIAG Change",changes);
+    this.dataIn = this.params.data;
   }
 }

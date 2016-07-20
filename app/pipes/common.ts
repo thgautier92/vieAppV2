@@ -68,7 +68,6 @@ export class textToDate implements PipeTransform {
     let d = (value.substring(0, 10));
     let t = (value.substring(11, 20));
     ret = { "date": d, "time": t };
-    console.log(ret);
     return ret;
   }
 }

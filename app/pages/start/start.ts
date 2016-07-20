@@ -33,12 +33,11 @@ export class StartPage {
     this.params = couch.getParams();
     //console.log(this.params);
     this.couch.verifSession(true).then(response => {
-      console.log(response);
       this.userData = response;
       this.base = this.userData['name'].toLowerCase();
       this.loadBase(this.base);
     }, error => {
-      console.log(error);
+      console.error(error);
       this.userData = null;
       this.base = 'demo';
       this.display.displayToast("Veuillez vous identifier ! Mode démo activé");
@@ -58,15 +57,12 @@ export class StartPage {
     let me = this;
     me.docs = [];
     this.db.allDocs({ include_docs: true, descending: true }, function (err, data) {
-      console.log(data);
       me.docs = new groupBy().transform(data.rows, 'doc','rdv','dateRdv',10);
-      console.log(me.docs);
     });
   };
   start(item){
     // start the RDV with data
     console.log(item);
-    this.nav.push(RdvPage,{base:this.base,rdvId:item.id});
-
+    this.nav.setRoot(RdvPage,{base:this.base,rdvId:item.id});
   }
 }
