@@ -745,6 +745,36 @@
             "icon": "body",
             "fields": [
                 {
+                    "group": "Identité numérique",
+                    "model": "email_perso",
+                    "title": "Email personnel",
+                    "default": "",
+                    "required": "true",
+                    "readOnly": "false",
+                    "error": "Veuillez vérifier la zone : 'Email personnel'",
+                    "type": "email"
+                },
+                {
+                    "group": "Identité numérique",
+                    "model": "nom",
+                    "title": "Nom",
+                    "default": "",
+                    "required": "true",
+                    "readOnly": "true",
+                    "error": "Veuillez vérifier la zone : 'Nom'",
+                    "type": "text"
+                },
+                {
+                    "group": "Identité numérique",
+                    "model": "prenom",
+                    "title": "Prénom",
+                    "default": "",
+                    "required": "true",
+                    "readOnly": "true",
+                    "error": "Veuillez vérifier la zone : 'Prénom'",
+                    "type": "text"
+                },
+                {
                     "group": "Action réservé conseiller",
                     "model": "signature_valid",
                     "title": "Validation de la signature des documents ?",
@@ -804,6 +834,10 @@
         {
             "dataSource": "NOM",
             "field": "nom"
+        },
+        {
+            "dataSource": "PRENOM",
+            "field": "prenom"
         },
         {
             "dataSource": "ADRESSE",

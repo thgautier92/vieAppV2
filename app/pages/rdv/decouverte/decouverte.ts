@@ -1,5 +1,5 @@
-import { Component, Input, AfterViewChecked,ViewChild, ViewChildren } from '@angular/core';
-import { Page, NavController, NavParams } from 'ionic-angular';
+import { Component, Input} from '@angular/core';
+import { Page, NavController, NavParams, Events } from 'ionic-angular';
 import {FlexInput} from '../../../components/flex-input/flex-input';
 
 
@@ -15,17 +15,16 @@ import {FlexInput} from '../../../components/flex-input/flex-input';
   templateUrl: 'build/pages/rdv/decouverte/decouverte.html',
   directives: [FlexInput]
 })
-export class DecouvertePage  {
+export class DecouvertePage {
   dataIn: any = {};
   dataOut: any = {};
   params: NavParams;
-  constructor(private nav: NavController, params: NavParams) {
+  constructor(private nav: NavController, params: NavParams, private events: Events) {
     this.params = params;
     this.dataIn = this.params.data;
     this.dataOut = {};
-  }
-  ngAfterContentChecked() {
-    console.log("DECOUVERTE Change",this.params.data);
-    //this.dataIn = this.params.data;
+    this.events.subscribe('clientChange', eventData => {
+      this.dataIn=eventData[0];
+    });
   }
 }

@@ -31,8 +31,8 @@
     <button menuToggle start><ion-icon name="menu"></ion-icon></button>
   </ion-navbar>
 
-  <ion-tabs #rdvTabs *ngIf="currentCli" tabbarPlacement="bottom" tabbarLayout="icon-left">
-    <ion-tab *ngFor="let item of dataMenu" 
+  <ion-tabs #rdvTabs *ngIf="currentCli" tabbarPlacement="top" tabbarLayout="icon-left">
+    <ion-tab *ngFor="let item of dataMenu" secondary
     [tabIcon]="item.icon" 
     [tabTitle]="item.lib" 
     [root]="item.page"

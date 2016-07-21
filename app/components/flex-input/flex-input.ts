@@ -31,13 +31,19 @@ export class FlexInput implements AfterViewInit, OnChanges {
     this.form = this.fb.group({});
   }
   ngAfterViewInit() {
-    console.log("!! Data passed to component : ",this.dataIn);
+    //console.log("!! Data passed to component : ", this.dataIn);
+    this.loadForm(this.dataIn);
+  };
+  ngOnChanges(changes: any) {
+    //console.log(changes);
+    this.loadForm(changes.dataIn.currentValue);
+  };
+  loadForm(dataForm) {
     // Get Info about menu
     this.paramsApi.loadMenu().then(menu => {
-      //console.log("Menu", menu);
-      this.menuCurrent = menu[this.idMenu-1];
+      this.menuCurrent = menu[this.idMenu - 1];
     });
-    this.paramsApi.getForm(this.idMenu, this.dataIn).then(data => {
+    this.paramsApi.getForm(this.idMenu, dataForm).then(data => {
       //console.log("== Return form data ", this.idMenu, data);
       this.form = data['formGroup'];
       this.selectedForm = data['form'];
@@ -49,9 +55,6 @@ export class FlexInput implements AfterViewInit, OnChanges {
       console.error("Impossible de lire le formulaire", this.idMenu);
       console.error(error);
     });
-  }
-  ngOnChanges(changes: any) {
-    console.log(changes);
   }
 }
 // ===== Validators method =====

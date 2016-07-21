@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { Platform, NavController, NavParams, Tabs } from 'ionic-angular';
+import { Component, Output,EventEmitter } from '@angular/core';
+import { Platform, NavController, NavParams, Events,Tabs } from 'ionic-angular';
 import { FORM_DIRECTIVES,
   NgForm, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
@@ -10,6 +10,7 @@ import {DisplayTools} from '../comon/display';
 
 import {DiagConseilPage} from './diag-conseil/diag-conseil';
 import {DecouvertePage} from './decouverte/decouverte';
+import {SignaturePage} from './signature/signature';
 import {StartPage} from '../start/start';
 
 declare var PouchDB: any;
@@ -25,7 +26,6 @@ declare var PouchDB: any;
   pipes: [groupBy, ValuesPipe, KeysPipe, textToDate]
 })
 export class RdvPage {
-  @ViewChild('rdvTabs') rdvTabs: any;
   db: any;
   base: any;
   currentRdv: any = {};
@@ -33,7 +33,7 @@ export class RdvPage {
   lstCli: any = [];
   rdvId: any;
   dataMenu: any;
-  constructor(private platform: Platform, private nav: NavController, navParams: NavParams,
+  constructor(private platform: Platform, private nav: NavController, navParams: NavParams,private events: Events,
     private display: DisplayTools, private couch: CouchDbServices,
     private paramsApi: Paramsdata, fb: FormBuilder) {
     this.platform = platform;
@@ -43,6 +43,7 @@ export class RdvPage {
     this.dataMenu = [
       { "id": 1, "status": "Hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage, "form": 1 },
       { "id": 2, "status": "Hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage, "form": 2 },
+      { "id": 3, "status": "Hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage, "form": 7 },
     ]
   }
   ngAfterViewInit() {
@@ -74,7 +75,7 @@ export class RdvPage {
   start(idx) {
     this.currentCli = this.currentRdv.clients[idx];
     console.log("Data client", this.currentCli);
-    console.log("Tabs ", this.rdvTabs);
+    this.events.publish('clientChange',this.currentCli )
     /*this.nav.push(DiagConseilPage, { "idMenu": 1, "dataIn": this.currentCli }).then(data => {
       console.log("Data return from form", data);
     });
