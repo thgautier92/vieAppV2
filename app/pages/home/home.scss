@@ -1,11 +1,39 @@
 .home {
-
+    ion-card {
+    position: relative;
+    text-align: center;
+  }
+  ion-card img {
+    display: block;
+    width: 100%;
 }
-.logo {
+  .card-title {
+    position: absolute;
+    top: 10%;
+    font-size: 3.0em;
+    width: 100%;
+    font-weight: bold;
+    color: map-get($colors, favorite);
+  }
+  .card-subtitle {
+    font-size: 2.0em;
+    position: absolute;
+    top: 52%;
+    width: 100%;
+    color: #fff;
+  }
+}
+.logoHeader {
+    display:flex;
+    align-items: center;
+}
+.logoHeader img{
     max-width: 30%;
+    height: auto;
+    vertical-align: middle;
 }
 .toolbar-background {
-        background: transparent;
+    background: transparent;
 }
 .small{
     font-size:9px;
@@ -25,3 +53,4 @@
     display: block;
     max-height: 92%;
 }
+

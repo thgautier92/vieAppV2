@@ -16,14 +16,19 @@ import {FlexInput} from '../../../components/flex-input/flex-input'
 })
 export class DiagConseilPage {
   dataIn: any = {};
+  idClient: any = "";
   dataOut: any = {};
-  params:NavParams;
-  constructor(private nav: NavController, params:NavParams,private events: Events) {
+  params: NavParams;
+  statPage:any;
+  constructor(private nav: NavController, params: NavParams, private events: Events) {
     this.params = params;
-    this.dataIn = this.params.data;
-    this.dataOut={};
+    this.idClient=this.params.data['currentCli'];
+    this.dataIn = this.params.data['currentDoc'];
+    this.dataOut = {};
     this.events.subscribe('clientChange', eventData => {
-      this.dataIn=eventData[0];
+      console.log(eventData);
+      this.idClient=eventData[0]['currentCli'];
+      this.dataIn=eventData[0]['currentDoc'];
     });
   }
 }

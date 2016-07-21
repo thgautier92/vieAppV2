@@ -6,8 +6,17 @@
 -->
 <div>
   <form (ngSubmit)="onSubmit()" [(ngFormModel)]="form" class="css-form">
-    <ion-row responsive-sm>
-      <ion-col width-33 *ngFor="let key of selectedFields | keys">
+    <ion-toolbar position="top">
+      <ion-title>{{menuCurrent.lib}}</ion-title>
+      <ion-buttons end>
+        <button>Etat de votre saisie : {{menuCurrent.status}}</button>
+        <button danger (click)="diagNext('hold')"><ion-icon name="square"></ion-icon></button>
+        <button favorite (click)="diagNext('partial')"><ion-icon name="pause"></ion-icon></button>
+        <button secondary (click)="diagNext('completed')"><ion-icon name="play"></ion-icon></button>
+      </ion-buttons>
+    </ion-toolbar>
+    <ion-row wrap>
+      <ion-col  *ngFor="let key of selectedFields | keys">
         <ion-card>
           <ion-card-header>{{key.key}}</ion-card-header>
           <ion-list>

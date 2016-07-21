@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import {DisplayTools} from '../comon/display';
 import {StartPage} from '../start/start';
 
@@ -16,14 +16,18 @@ import {StartPage} from '../start/start';
 export class HomePage {
   items: any;
   display: any;
-  constructor(public nav: NavController, display: DisplayTools) {
+  userData:any;
+  constructor(public nav: NavController, private params: NavParams, display: DisplayTools) {
     this.nav = nav;
+    console.log(params);
+    this.userData = params.data;
     this.display = display;
     this.items = [
-      { 'title': 'Start', 'icon': 'regime_retraite_complementaire.jpg', 'description': "Démarrer un RDV", 'link': StartPage, 'color': this.display.getRandomColor() },
+      { 'title': 'Go !', 'icon': 'loi-madelin-contact1-370x192.jpg', 'description': "Démarrer un RDV", 'link': StartPage, 'color': this.display.getRandomColor() },
+      { 'title': 'Découvrir', 'icon': 'regime_retraite_complementaire.jpg', 'description': "Découvrir les offres", 'link': StartPage, 'color': this.display.getRandomColor() },
     ]
   }
   openNavDetailsPage(item) {
-    this.nav.push(item.link);
+    this.nav.setRoot(item.link);
   }
 }

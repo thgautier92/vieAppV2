@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController,Toast } from 'ionic-angular';
+import { NavController, Events, Toast } from 'ionic-angular';
 import {Page, Storage, LocalStorage} from 'ionic-angular';
 import {FORM_DIRECTIVES} from '@angular/common';
 import {CouchDbServices} from '../../providers/couch/couch';
@@ -9,51 +9,62 @@ import {HomePage} from '../home/home';
 @Component({
   templateUrl: 'build/pages/auth/auth.html',
   directives: [FORM_DIRECTIVES],
-  providers : [CouchDbServices]
+  providers: [CouchDbServices]
 })
 export class AuthPage {
   authType: string = "login";
   user: string;
-  isAut:boolean;
-  constructor(private nav: NavController, private couch: CouchDbServices) {
+  isAut: boolean;
+  constructor(private nav: NavController, private couch: CouchDbServices, private events:Events) {
     //this.couch.closeSession();
-    this.couch.verifSession().then(data=>{
-      console.log(data);
-      this.isAut=true;
-      this.nav.pop(HomePage);
-    },error=>{
+    this.couch.verifSession(true).then(response => {
+      this.isAut = true;
+      this.nav.setRoot(HomePage, response);
+    }, error => {
       console.log(error);
-      this.isAut=false;
+      this.isAut = false;
     });
   }
   login(credentials) {
     //console.log(credentials);
-    this.couch.openSession(credentials,null).then(response =>{
+    this.couch.openSession(credentials, null).then(response => {
       //console.log(response);
       if (response['ok']) {
         console.log("User Auth validated");
-        this.nav.push(HomePage);
+        this.couch.verifSession(true).then(response => {
+          this.isAut = true;
+          this.events.publish('userChange', response);
+          this.nav.setRoot(HomePage, response);
+        }, error => {
+          console.log(error);
+          this.isAut = false;
+          let toast = Toast.create({
+            message: 'Connexion impossible. Erreur technique.',
+            duration: 3000
+          });
+          this.nav.present(toast);
+        });
       } else {
         console.log("Password not valid");
         let toast = Toast.create({
           message: 'Utilisateur / mot de passe invalide !',
           duration: 3000
-         });
+        });
         this.nav.present(toast);
       }
-    },error =>{
+    }, error => {
       console.log(error);
       let toast = Toast.create({
-          message: 'Utilisateur / mot de passe invalide !',
-          duration: 3000
-         });
-        this.nav.present(toast);
+        message: 'Utilisateur / mot de passe invalide !',
+        duration: 3000
+      });
+      this.nav.present(toast);
     })
   }
 
   signup(credentials) {
     console.log(credentials);
-    this.couch.putUser(credentials,null).then(response =>{
+    this.couch.putUser(credentials, null).then(response => {
       console.log(response);
       if (credentials.password === response['password']) {
         console.log("User Auth validated");
@@ -61,16 +72,16 @@ export class AuthPage {
       } else {
         console.log("Password not valid");
       }
-    },error =>{
+    }, error => {
       console.log(error);
     })
   }
-  authenticated(){
+  authenticated() {
     return this.isAut;
   }
   restart() {
     this.couch.closeSession();
-    this.isAut=false;
-    this.authType="login";
+    this.isAut = false;
+    this.authType = "login";
   }
 }

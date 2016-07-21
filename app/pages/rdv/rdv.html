@@ -1,25 +1,38 @@
 <!--
-  Generated template for the RdvPage page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-
-<ion-navbar>
-  <ion-title></ion-title>
-</ion-navbar>
+Rdv Main Page
 -->
-<ion-menu id="menuRdv" [content]="contentRdv" side="right">
-  <ion-toolbar>
-    <ion-title>Liste des dossiers du RDV</ion-title>
+<ion-menu id="menuCli" [content]="contentRdv" side="right">
+  <ion-toolbar primary>
+    <ion-title>Dossiers du RDV</ion-title>
+    <ion-buttons start>
+      <button menuClose="menuCli">Fermer</button>
+    </ion-buttons>
   </ion-toolbar>
   <ion-content>
     <ion-list>
-      <button menuToggle="menuRdv" ion-item *ngFor="let cli of lstCli;let i = index" (click)="start(i)" [ngClass]="{
-                      'soc' : cli.etatVie=='SOCIETAIRE',
-                      'prosp' : cli.etatVie=='PROSPECT'}">
-      <ion-icon *ngIf="cli.rdvStatus" item-right name="logo-tux"></ion-icon>
-      <h5>#{{cli.clientId}} {{cli.clientName}} <span *ngIf="cli.clientPrenom!=='null'">{{cli.clientPrenom}}</span></h5>
+      <ion-item menuClose="menuCli" menuToggle="menuCli" ion-item *ngFor="let cli of lstCli;let i = index" (click)="start(i)" [ngClass]="{
+                        'soc' : cli.etatVie=='SOCIETAIRE',
+                        'prosp' : cli.etatVie=='PROSPECT'}">
+        <ion-icon *ngIf="cli.rdvStatus" item-right name="logo-tux"></ion-icon>
+        <h5>#{{cli.clientId}} {{cli.clientName}} <span *ngIf="cli.clientPrenom!=='null'">{{cli.clientPrenom}}</span></h5>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<ion-menu id="menuRdv" [content]="contentRdv" side="right">
+  <ion-toolbar danger>
+    <ion-title>Options</ion-title>
+    <ion-buttons start>
+      <button menuClose="menuRdv">Fermer</button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-content>
+    <ion-list>
+      <button menuClose="menuRdv" ion-item *ngFor="let opt of rdvMenu" (click)="callMenu(opt)" detail-push>
+        <ion-icon item-left name="{{opt.icon}}"></ion-icon>
+      {{opt.lib}}
     </button>
+    
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -27,23 +40,17 @@
 <ion-content #contentRdv class="rdv">
   <ion-navbar *navbar primary>
     <ion-title>Rendez-vous #{{rdvId}}</ion-title>
-    <button menuToggle="menuRdv" end><ion-icon name="people"></ion-icon></button>
-    <button menuToggle start><ion-icon name="menu"></ion-icon></button>
+    <button start menuToggle><ion-icon name="menu"></ion-icon></button>
+    <button end menuToggle="menuCli"><ion-icon name="people"></ion-icon></button>
+    <button end menuToggle="menuRdv"><ion-icon name="more"></ion-icon></button>
   </ion-navbar>
-
-  <ion-tabs #rdvTabs *ngIf="currentCli" tabbarPlacement="top" tabbarLayout="icon-left">
-    <ion-tab *ngFor="let item of dataMenu" secondary
-    [tabIcon]="item.icon" 
-    [tabTitle]="item.lib" 
-    [root]="item.page"
-    [rootParams]="retrieveData()" 
-    [tabBadge]="item.status" 
-    [tabBadgeStyle]="{
+  <ion-tabs #rdvTabs *ngIf="currentContext" tabbarPlacement="top" tabbarLayout="icon-left">
+    <ion-tab *ngFor="let item of dataMenu" secondary [tabIcon]="item.icon" [tabTitle]="item.lib" [root]="item.page" [rootParams]="retrieveData()"
+      [tabBadge]="item.status" [tabBadgeStyle]="{
           'Completed': item.status == 'Completed',
           'Hold': item.status == 'Hold' , 
           'Started': item.status == 'Started', 
-          'Pending': item.status == 'Pending'} "
-    preloadTabs="false">
+          'Pending': item.status == 'Pending'} " preloadTabs="false">
     </ion-tab>
   </ion-tabs>
 </ion-content>

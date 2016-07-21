@@ -84,7 +84,7 @@ export class Paramsdata {
             let model = formModel.filter(item => item['field'] === question['model']);
             let modelValue;
             if (model.length > 0) {
-              modelValue = dataInput['client']['output'][0][model[0]['dataSource']];
+              modelValue = dataInput[model[0]['dataSource']];
             } else {
               switch (question['type']) {
                 case "number":

@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {ionicBootstrap, Platform, MenuController, Nav} from 'ionic-angular';
+import {ionicBootstrap, Platform, MenuController, Nav, Events} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {CouchDbServices} from './providers/couch/couch';
 import {HomePage} from './pages/home/home';
@@ -17,16 +17,21 @@ class MyApp {
   // make HelloIonicPage the root (or first) page
   rootPage: any = HomePage;
   pages: Array<{ title: string, component: any, icon: any }>;
-  isAut: boolean;
+  isAut: boolean = false;
   userData: any = {};
 
   constructor(
     private platform: Platform,
     private menu: MenuController,
-    private couch: CouchDbServices
+    private couch: CouchDbServices,
+    private events: Events
   ) {
     this.initializeApp();
-
+    this.events.subscribe('userChange', eventData => {
+      console.log(eventData);
+      this.userData = eventData[0];
+      this.isAut = eventData[0]['ok'];
+    });
     // set our app's pages
     this.pages = [
       { title: 'Acceuil', component: HomePage, icon: "home" },
@@ -43,24 +48,27 @@ class MyApp {
     });
   };
   verif() {
+    let me = this;
     this.couch.verifSession(true).then(response => {
-      this.userData = response;
-      this.isAut = true;
-      this.nav.setRoot(HomePage);
+      me.userData = response;
+      me.isAut = true;
+      me.nav.setRoot(HomePage, this.userData);
     }, error => {
       console.log(error);
-      this.isAut = false;
-      this.disConnect();
+      me.isAut = false;
+      me.disConnect();
     });
   };
   connect() {
     this.menu.close();
-    this.nav.setRoot(AuthPage);
+    this.nav.push(AuthPage);
   };
   disConnect() {
     this.menu.close();
+    this.couch.closeSession();
+    this.userData = {};
     this.isAut = false;
-    this.nav.setRoot(AuthPage);
+    this.nav.push(AuthPage);
   };
   openPage(page) {
     // close the menu when clicking a link from the menu

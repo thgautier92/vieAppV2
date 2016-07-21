@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, Input, Output, AfterViewInit, OnChanges} from '@angular/core';
-import {IONIC_DIRECTIVES} from 'ionic-angular';
+import {IONIC_DIRECTIVES, Events} from 'ionic-angular';
 import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
 import {groupBy, ValuesPipe, KeysPipe} from '../../pipes/common';
@@ -27,22 +27,36 @@ export class FlexInput implements AfterViewInit, OnChanges {
   selectedFields: any;
   @Input() idMenu: any;
   @Input() dataIn: any;
-  constructor(private fb: FormBuilder, private paramsApi: Paramsdata) {
+  @Input() idClient: any;
+  constructor(private fb: FormBuilder, private paramsApi: Paramsdata, private events: Events) {
     this.form = this.fb.group({});
   }
   ngAfterViewInit() {
-    //console.log("!! Data passed to component : ", this.dataIn);
-    this.loadForm(this.dataIn);
+    console.log("!! Data passed to component : ", this.dataIn, this.idClient);
+    this.loadForm(this.dataIn['clients'][this.idClient]['client']['output'][0]);
   };
   ngOnChanges(changes: any) {
-    //console.log(changes);
-    this.loadForm(changes.dataIn.currentValue);
+    //console.log("Data Changes",changes);
+    this.idClient = changes.idClient.currentValue;
+    let d = {};
+    if (changes['dataIn']) {
+      d = changes.dataIn.currentValue;
+    } else {
+      d = this.dataIn;
+    }
+    this.loadForm(d['clients'][this.idClient]['client']['output'][0]);
   };
+  /* ======================================================================
+  * Create a form component with 
+  *    - all fields parameters and validation control
+  *    - default value , initialized from the synchronised folder
+  * ======================================================================= */
   loadForm(dataForm) {
     // Get Info about menu
     this.paramsApi.loadMenu().then(menu => {
       this.menuCurrent = menu[this.idMenu - 1];
     });
+    //console.log("Data to inject in form",dataForm);
     this.paramsApi.getForm(this.idMenu, dataForm).then(data => {
       //console.log("== Return form data ", this.idMenu, data);
       this.form = data['formGroup'];
@@ -55,6 +69,31 @@ export class FlexInput implements AfterViewInit, OnChanges {
       console.error("Impossible de lire le formulaire", this.idMenu);
       console.error(error);
     });
+  }
+  // Validation form
+  diagNext(formStatus) {
+    //console.log("Save data form", this.form.controls, this.selectedForm['fields']);
+    this.menuCurrent.status=formStatus;
+    let fForm = [];
+    for (var key in this.form.controls) {
+      let question = this.form.controls[key];
+      let field = this.selectedForm['fields'].filter(item => item.model === key);
+      fForm.push({
+        model: key,
+        field: field[0]['title'],
+        error: question['_errors'],
+        pristine: question['_pristine'],
+        status: question['_status'],
+        touched: question['_touched'],
+        value: question['_value']
+      });
+    }
+    let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm };
+    this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
+    this.events.publish('rdvSave', this.dataIn);
+  }
+  onSubmit() {
+    //console.log("Submit Form", this.form);
   }
 }
 // ===== Validators method =====
