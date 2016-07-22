@@ -45,12 +45,14 @@ Rdv Main Page
     <button end menuToggle="menuRdv"><ion-icon name="more"></ion-icon></button>
   </ion-navbar>
   <ion-tabs #rdvTabs *ngIf="currentContext" tabbarPlacement="top" tabbarLayout="icon-left">
-    <ion-tab *ngFor="let item of dataMenu" secondary [tabIcon]="item.icon" [tabTitle]="item.lib" [root]="item.page" [rootParams]="retrieveData()"
-      [tabBadge]="item.status" [tabBadgeStyle]="{
-          'Completed': item.status == 'Completed',
-          'Hold': item.status == 'Hold' , 
-          'Started': item.status == 'Started', 
-          'Pending': item.status == 'Pending'} " preloadTabs="false">
+    <ion-tab *ngFor="let item of dataMenu, let i = index" secondary 
+    [tabIcon]="item.icon" 
+    [tabTitle]="item.lib" 
+    [root]="item.page" 
+    [rootParams]="retrieveData(i)"
+    [tabBadge]="getStyle(item.status,'lib')" 
+    [tabBadgeStyle]="getStyle(item.status,'color')" 
+      preloadTabs="false">
     </ion-tab>
   </ion-tabs>
 </ion-content>

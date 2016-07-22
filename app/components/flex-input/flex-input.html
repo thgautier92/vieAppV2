@@ -10,9 +10,9 @@
       <ion-title>{{menuCurrent.lib}}</ion-title>
       <ion-buttons end>
         <button>Etat de votre saisie : {{menuCurrent.status}}</button>
-        <button danger (click)="diagNext('hold')"><ion-icon name="square"></ion-icon></button>
-        <button favorite (click)="diagNext('partial')"><ion-icon name="pause"></ion-icon></button>
-        <button secondary (click)="diagNext('completed')"><ion-icon name="play"></ion-icon></button>
+        <button danger (click)="diagNext('hold',$event)"><ion-icon name="square"></ion-icon></button>
+        <button favorite (click)="diagNext('partial',$event)"><ion-icon name="pause"></ion-icon></button>
+        <button secondary (click)="diagNext('completed',$event)"><ion-icon name="play"></ion-icon></button>
       </ion-buttons>
     </ion-toolbar>
     <ion-row wrap>

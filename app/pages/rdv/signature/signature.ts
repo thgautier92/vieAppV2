@@ -1,10 +1,7 @@
 import { Component, Input} from '@angular/core';
 import { Page, NavController, NavParams, Events } from 'ionic-angular';
+import {CalcTools} from '../../comon/calculate'
 import {FlexInput} from '../../../components/flex-input/flex-input';
-
-
-
-
 /*
   Generated class for the DiagConseilPage page.
 
@@ -13,23 +10,41 @@ import {FlexInput} from '../../../components/flex-input/flex-input';
 */
 @Component({
   templateUrl: 'build/pages/rdv/signature/signature.html',
-  directives: [FlexInput]
+  directives: [FlexInput],
+  providers: [CalcTools],
 })
 export class SignaturePage {
+  lstForms: any = [];
   dataIn: any = {};
+  idPage: any = {};
   idClient: any = "";
   dataOut: any = {};
   params: NavParams;
-  statPage: any;
-  constructor(private nav: NavController, params: NavParams, private events: Events) {
+  pageStatus: any;
+  constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
+    //this.idPage = this.params.data['currentPage'];
+    this.idPage = 3;
     this.idClient = this.params.data['currentCli'];
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
+    this.lstForms = [
+      { "id": 7, "status": "" }
+    ];
+    // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
-      console.log(eventData);
       this.idClient = eventData[0]['currentCli'];
       this.dataIn = eventData[0]['currentDoc'];
+      for (var key in this.lstForms) { this.lstForms[key]['status'] = ""; }
+      CalcTools.calcPageStatus(this.idPage, this.lstForms);
+    });
+    this.events.subscribe('rdvStatus', dataReturn => {
+      console.log("Update status form", this.lstForms, dataReturn);
+      let idForm = dataReturn[0]['form']['id'];
+      let f = this.lstForms.filter(item => item['id'] === idForm);
+console.log("Search Form status",f);
+      f[0]['status'] = dataReturn[0]['status'];
+      CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
   }
 }

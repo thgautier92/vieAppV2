@@ -28,6 +28,7 @@ declare var PouchDB: any;
 export class RdvPage {
   db: any;
   base: any;
+  refStatus: any = []
   currentRdv: any = {};
   currentCli: any = null;
   currentContext: any;
@@ -42,18 +43,30 @@ export class RdvPage {
     this.base = navParams.get("base");
     this.rdvId = navParams.get("rdvId");
     this.db = new PouchDB(this.base);
+    this.refStatus = [
+      { "code": "hold", "lib": "Attente", "color": "danger" },
+      { "code": "partial", "lib": "Partiel", "color": "favorite" },
+      { "code": "completed", "lib": "Complet", "color": "secondary" },
+    ]
     this.dataMenu = [
-      { "id": 1, "status": "Hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage, "form": 1 },
-      { "id": 2, "status": "Hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage, "form": 2 },
-      { "id": 3, "status": "Hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage, "form": 7 },
+      { "id": 1, "status": "hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage, "form": 1 },
+      { "id": 2, "status": "hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage, "form": 2 },
+      { "id": 3, "status": "hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage, "form": 7 },
     ]
     this.rdvMenu = [
-      { "id": 1, "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage },
-      { "id": 2, "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage },
-      { "id": 3, "lib": "Signatures", "icon": "ribbon", "page": SignaturePage },
+      { "id": 1, "lib": "Recopier", "icon": "person", "page": null },
+      { "id": 2, "lib": "action 2", "icon": "home", "page": null },
+      { "id": 3, "lib": "action 3", "icon": "ribbon", "page": null },
     ];
+    // ===== Events operation on page =====
     events.subscribe('rdvSave', eventData => {
       this.saveData(eventData[0]);
+    });
+    events.subscribe('menuStatusChange', eventData => {
+      console.log("Update status menu", eventData);
+      let idMenu = eventData[0]['id'];
+      let m = this.dataMenu.filter(item => item['id'] === idMenu);
+      m[0]['status'] = eventData[0]['status'];
     });
   }
   ngAfterViewInit() {
@@ -85,24 +98,31 @@ export class RdvPage {
     });
   }
   start(idx) {
-    this.currentCli = idx;
     console.log("Select client Index", this.currentCli);
-    //this.dataMenu[idx]['status'] = "Started";
-    this.currentContext = { "currentCli": this.currentCli, "currentDoc": this.currentRdv }
+    this.currentCli = idx;
+    //this.currentContext = { "currentPage": null, "currentCli": this.currentCli, "currentDoc": this.currentRdv }
+    this.currentContext = {"currentCli": this.currentCli, "currentDoc": this.currentRdv }
+    console.log("Current Context",this.currentContext);
     this.events.publish('clientChange', this.currentContext);
   }
-  retrieveData() {
+  retrieveData(idx) {
+    //this.currentContext['currentPage'] = idx - 1;
     return this.currentContext;
+  }
+  // Get the tab style, defined in the refStatus variable
+  getStyle(status, field) {
+    let r = this.refStatus.filter(item => item['code'] === status);
+    return (r.length == 0) ? "ligth" : r[0][field];
   }
   // Save data in PouchDb locally
   saveData(docPut) {
-    let me=this;
+    let me = this;
     console.log("RDV to save in Pouch", docPut);
-    let id=docPut['_id'];
+    let id = docPut['_id'];
     this.db.get(id).then(function (docLocal) {
       //console.log(docLocal);
       let rev = docLocal['_rev'];
-      let up={_id: id, _rev: rev, clients: docPut['clients'],rdv: docPut['rdv']};
+      let up = { _id: id, _rev: rev, clients: docPut['clients'], rdv: docPut['rdv'] };
       return me.db.put(up);
     }).then(function (response) {
       //console.log(response);

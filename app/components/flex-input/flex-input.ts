@@ -14,8 +14,7 @@ import {Paramsdata} from '../../providers/params-data/params-data';
 @Component({
   selector: 'flex-input',
   templateUrl: 'build/components/flex-input/flex-input.html',
-  inputs: ['idMenu', 'dataIn'],
-  outputs: ['dataOut'],
+  inputs: [,'idPage','idMenu', 'dataIn','idClient'],
   directives: [IONIC_DIRECTIVES, FORM_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault],
   pipes: [groupBy, ValuesPipe, KeysPipe],
   providers: [Paramsdata]
@@ -25,6 +24,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
   form: any;
   selectedForm: any;
   selectedFields: any;
+  @Input() idPage: any;
   @Input() idMenu: any;
   @Input() dataIn: any;
   @Input() idClient: any;
@@ -32,7 +32,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
     this.form = this.fb.group({});
   }
   ngAfterViewInit() {
-    console.log("!! Data passed to component : ", this.dataIn, this.idClient);
+    console.log("!! Data passed to component : ",this.idPage, this.idMenu, this.dataIn, this.idClient);
     this.loadForm(this.dataIn['clients'][this.idClient]['client']['output'][0]);
   };
   ngOnChanges(changes: any) {
@@ -71,8 +71,9 @@ export class FlexInput implements AfterViewInit, OnChanges {
     });
   }
   // Validation form
-  diagNext(formStatus) {
+  diagNext(formStatus,evt) {
     //console.log("Save data form", this.form.controls, this.selectedForm['fields']);
+    //console.log("Click event",evt);
     this.menuCurrent.status=formStatus;
     let fForm = [];
     for (var key in this.form.controls) {
@@ -91,6 +92,8 @@ export class FlexInput implements AfterViewInit, OnChanges {
     let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm };
     this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
     this.events.publish('rdvSave', this.dataIn);
+    this.events.publish('rdvStatus', {idPage:this.idPage,form: this.selectedForm, status: formStatus});
+
   }
   onSubmit() {
     //console.log("Submit Form", this.form);
