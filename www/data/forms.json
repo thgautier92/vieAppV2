@@ -654,7 +654,7 @@
                 {
                     "group": "Epargne",
                     "model": "urlSimu",
-                    "title": "Simuler",
+                    "title": "Simuler (demo retraite)",
                     "default": "https://www.labanquepostale.fr/particulier/Outils/simulateurs/diagnostic_retraite.diagretraite.html",
                     "required": false,
                     "readonly": false,

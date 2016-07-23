@@ -2,6 +2,7 @@ import { Component, Input} from '@angular/core';
 import { Page, NavController, NavParams, Events } from 'ionic-angular';
 import {CalcTools} from '../../comon/calculate'
 import {FlexInput} from '../../../components/flex-input/flex-input';
+
 /*
   Generated class for the DiagConseilPage page.
 
@@ -9,11 +10,11 @@ import {FlexInput} from '../../../components/flex-input/flex-input';
   Ionic pages and navigation.
 */
 @Component({
-  templateUrl: 'build/pages/rdv/signature/signature.html',
+  templateUrl: 'build/pages/rdv/decouverte/decouverte.html',
   directives: [FlexInput],
   providers: [CalcTools],
 })
-export class SignaturePage {
+export class SouscriptionPage {
   lstForms: any = [];
   dataIn: any = {};
   idPage: any = {};
@@ -24,12 +25,13 @@ export class SignaturePage {
   constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
-    this.idPage = 4;
+    this.idPage = 3
     this.idClient = this.params.data['currentCli'];
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 7, "status": "" }
+      { "id": 5, "status": "" },
+      { "id": 6, "status": "" }
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
@@ -42,7 +44,6 @@ export class SignaturePage {
       console.log("Update status form", this.lstForms, dataReturn);
       let idForm = dataReturn[0]['form']['id'];
       let f = this.lstForms.filter(item => item['id'] === idForm);
-console.log("Search Form status",f);
       f[0]['status'] = dataReturn[0]['status'];
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });

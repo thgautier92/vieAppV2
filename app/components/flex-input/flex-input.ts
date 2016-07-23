@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, Input, Output, AfterViewInit, OnChanges} from '@angular/core';
-import {IONIC_DIRECTIVES, Events} from 'ionic-angular';
+import {IONIC_DIRECTIVES, Platform, Events} from 'ionic-angular';
 import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
 import {groupBy, ValuesPipe, KeysPipe} from '../../pipes/common';
@@ -14,7 +14,7 @@ import {Paramsdata} from '../../providers/params-data/params-data';
 @Component({
   selector: 'flex-input',
   templateUrl: 'build/components/flex-input/flex-input.html',
-  inputs: [,'idPage','idMenu', 'dataIn','idClient'],
+  inputs: [, 'idPage', 'idMenu', 'dataIn', 'idClient'],
   directives: [IONIC_DIRECTIVES, FORM_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault],
   pipes: [groupBy, ValuesPipe, KeysPipe],
   providers: [Paramsdata]
@@ -28,11 +28,11 @@ export class FlexInput implements AfterViewInit, OnChanges {
   @Input() idMenu: any;
   @Input() dataIn: any;
   @Input() idClient: any;
-  constructor(private fb: FormBuilder, private paramsApi: Paramsdata, private events: Events) {
+  constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private events: Events) {
     this.form = this.fb.group({});
   }
   ngAfterViewInit() {
-    console.log("!! Data passed to component : ",this.idPage, this.idMenu, this.dataIn, this.idClient);
+    console.log("!! Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
     this.loadForm(this.dataIn['clients'][this.idClient]['client']['output'][0]);
   };
   ngOnChanges(changes: any) {
@@ -71,10 +71,10 @@ export class FlexInput implements AfterViewInit, OnChanges {
     });
   }
   // Validation form
-  diagNext(formStatus,evt) {
+  diagNext(formStatus, evt) {
     //console.log("Save data form", this.form.controls, this.selectedForm['fields']);
     //console.log("Click event",evt);
-    this.menuCurrent.status=formStatus;
+    this.menuCurrent.status = formStatus;
     let fForm = [];
     for (var key in this.form.controls) {
       let question = this.form.controls[key];
@@ -92,8 +92,21 @@ export class FlexInput implements AfterViewInit, OnChanges {
     let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm };
     this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
     this.events.publish('rdvSave', this.dataIn);
-    this.events.publish('rdvStatus', {idPage:this.idPage,form: this.selectedForm, status: formStatus});
-
+    this.events.publish('rdvStatus_' + this.idPage, { idPage: this.idPage, form: this.selectedForm, status: formStatus });
+  }
+  openSimu(url) {
+    console.log("Open url",url);
+    var options = {
+      location: 'yes',
+      clearcache: 'yes',
+      toolbar: 'yes'
+    };
+    window.open(url,"_system");
+    /*
+    this.platform.ready().then(() => {
+      cordova.InAppBrowser.open(url, "_system", options);
+    });
+    */
   }
   onSubmit() {
     //console.log("Submit Form", this.form);

@@ -20,7 +20,7 @@
         <ion-card>
           <ion-card-header>{{key.key}}</ion-card-header>
           <ion-list>
-            <ion-item *ngFor="let field of key.value">
+            <ion-item *ngFor="let field of key.value, let idx=index">
               <ion-icon item-left class="fieldIcon" [ngClass]="{
                   'ion-md-list' : field.type=='enum',
                   'ion-md-calendar' : field.type=='date',
@@ -42,8 +42,8 @@
                 [(ngModel)]="field.value" clearInput></ion-input>
               <ion-input *ngIf="field.type=='email'" type="{{field.type}}" [ngControl]="field.model" primary name="input_{{field.model}}"
                 [(ngModel)]="field.value" clearInput></ion-input>
-              <button *ngIf="field.type=='url'" ng-click="openSimu(item.default)"><ion-icon name="wifi"></ion-icon> {{field.title}}</button>
-              <button *ngIf="field.type=='urlData'" ng-click="openSimuData($index,item.model,item.default)"><ion-icon name="connection-bars"></ion-icon> {{field.title}}</button>
+              <button outline item-right *ngIf="field.type=='url'" (click)="openSimu(field.default)"><ion-icon name="wifi"></ion-icon> démarrer</button>
+              <button outline item-right *ngIf="field.type=='urlData'" (click)="openSimuData(idx,field.model,field.default)"><ion-icon name="connection-bars"></ion-icon> démarrer</button>
 
               <ion-toggle *ngIf="field.type=='boolean'" checked="false" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"></ion-toggle>
 

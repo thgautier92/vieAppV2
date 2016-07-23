@@ -126,7 +126,7 @@ export class Paramsdata {
     });
   };
   /* -----
-  * Methods for data store during forms input
+  * Tests : Methods for data store during forms input
   */
   initDataForms() {
     this.dataForms[0] = { ts: new Date() };

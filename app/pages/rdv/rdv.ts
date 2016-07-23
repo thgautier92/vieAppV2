@@ -10,6 +10,7 @@ import {DisplayTools} from '../comon/display';
 
 import {DiagConseilPage} from './diag-conseil/diag-conseil';
 import {DecouvertePage} from './decouverte/decouverte';
+import {SouscriptionPage} from './souscription/souscription';
 import {SignaturePage} from './signature/signature';
 import {StartPage} from '../start/start';
 
@@ -31,6 +32,7 @@ export class RdvPage {
   refStatus: any = []
   currentRdv: any = {};
   currentCli: any = null;
+  titleRdv:any = "";
   currentContext: any;
   lstCli: any = [];
   rdvId: any;
@@ -49,13 +51,14 @@ export class RdvPage {
       { "code": "completed", "lib": "Complet", "color": "secondary" },
     ]
     this.dataMenu = [
-      { "id": 1, "status": "hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage, "form": 1 },
-      { "id": 2, "status": "hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage, "form": 2 },
-      { "id": 3, "status": "hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage, "form": 7 },
+      { "id": 1, "status": "hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage},
+      { "id": 2, "status": "hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage},
+      { "id": 3, "status": "hold", "lib": "Souscription", "icon": "home", "page": SouscriptionPage},
+      { "id": 4, "status": "hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage},
     ]
     this.rdvMenu = [
       { "id": 1, "lib": "Recopier", "icon": "person", "page": null },
-      { "id": 2, "lib": "action 2", "icon": "home", "page": null },
+      { "id": 2, "lib": "Pièces", "icon": "home", "page": null },
       { "id": 3, "lib": "action 3", "icon": "ribbon", "page": null },
     ];
     // ===== Events operation on page =====
@@ -99,6 +102,7 @@ export class RdvPage {
   }
   start(idx) {
     console.log("Select client Index", this.currentCli);
+    this.titleRdv = this.currentRdv['clients'][idx]['client']['output'][0]['NOM'];
     this.currentCli = idx;
     //this.currentContext = { "currentPage": null, "currentCli": this.currentCli, "currentDoc": this.currentRdv }
     this.currentContext = {"currentCli": this.currentCli, "currentDoc": this.currentRdv }
