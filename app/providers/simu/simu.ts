@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers,RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 /*
@@ -11,25 +11,45 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Simu {
   data: any;
-  rootUrl:any = "http://gautiersa.fr/vie";
-
+  rootUrl: any = "http://gautiersa.fr/apps/api/v2";
   constructor(private http: Http) {
     this.data = null;
+
   }
 
-  callSimu() {
-    let url=this.rootUrl+"/simu";
-    let dataCall:any={};
-    return new Promise(resolve => {
-      this.http.post(url,dataCall)
-        .map(res => res.json())
-        .subscribe(data => {
-          // we've got back the raw data, now generate the core schedule data
-          // and save the data for later reference
-          this.data = data;
-          resolve(this.data);
+  callSimu(data) {
+    return new Promise((resolve, reject) => {
+      let url = this.rootUrl + "vie/simu";
+      if (!window['device']){
+        console.log("Proxy CORS added for Web application");
+        url="/gsapi/vie/simu";    
+      }
+      // ***** To be modified for a specific target *****
+      let dataCall: any = {
+        "rdvId": data.rdvId,
+        "dataIn": JSON.stringify(data)
+      };
+      let user = "demo";
+      let password = "demo";
+      let credHeaders = new Headers();
+      credHeaders.append('Content-Type', 'application/json');
+      credHeaders.append('Accept', 'application/json;charset=utf-8');
+      credHeaders.append('Authorization', 'Basic ' + window.btoa(user + ':' + password))
+      let options = new RequestOptions({ headers: credHeaders });
+      this.http.post(url, dataCall, options)
+        .subscribe(res => {
+          console.log("Post response", res);
+          resolve(res);
+        }, error => {
+          console.log("Post error", error);
+          if (typeof (error._body) === "string") {
+            reject(JSON.parse(error._body));
+          } else {
+            reject({ error: "Erreur appel", reason: "Le service n'est pas disponible." });
+          }
         });
     });
+
   }
 }
 

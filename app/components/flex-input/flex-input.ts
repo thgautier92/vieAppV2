@@ -4,6 +4,7 @@ import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, Abstra
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
 import {groupBy, ValuesPipe, KeysPipe} from '../../pipes/common';
 import {Paramsdata} from '../../providers/params-data/params-data';
+import {Simu} from '../../providers/simu/simu';
 
 /*
   Generated class for the FlexInput component.
@@ -17,7 +18,7 @@ import {Paramsdata} from '../../providers/params-data/params-data';
   inputs: [, 'idPage', 'idMenu', 'dataIn', 'idClient'],
   directives: [IONIC_DIRECTIVES, FORM_DIRECTIVES, NgSwitch, NgSwitchWhen, NgSwitchDefault],
   pipes: [groupBy, ValuesPipe, KeysPipe],
-  providers: [Paramsdata]
+  providers: [Paramsdata, Simu]
 })
 export class FlexInput implements AfterViewInit, OnChanges {
   menuCurrent: any = {};
@@ -28,7 +29,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
   @Input() idMenu: any;
   @Input() dataIn: any;
   @Input() idClient: any;
-  constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private events: Events) {
+  constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private simu: Simu, private events: Events) {
     this.form = this.fb.group({});
   }
   ngAfterViewInit() {
@@ -95,18 +96,32 @@ export class FlexInput implements AfterViewInit, OnChanges {
     this.events.publish('rdvStatus_' + this.idPage, { idPage: this.idPage, form: this.selectedForm, status: formStatus });
   }
   openSimu(url) {
-    console.log("Open url",url);
+    console.log("Open url", url);
     var options = {
       location: 'yes',
       clearcache: 'yes',
       toolbar: 'yes'
     };
-    window.open(url,"_system");
+    window.open(url, "_system");
     /*
     this.platform.ready().then(() => {
       cordova.InAppBrowser.open(url, "_system", options);
     });
     */
+  }
+  openSimuData(idx, field, url) {
+    console.log("OPEN SIMU WITH DATA:", idx, field, url);
+    this.simu.callSimu({ rdvId: 10, dataIn: "toto" }).then(function (data) {
+      url = data['urlNext'];
+      let idSimu = data['insert_id'];
+      let idField = idx;
+      var options = {
+        location: 'yes',
+        clearcache: 'yes',
+        toolbar: 'yes'
+      };
+      window.open(url, "_system");
+    });
   }
   onSubmit() {
     //console.log("Submit Form", this.form);
