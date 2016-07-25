@@ -22,9 +22,11 @@ import {Simu} from '../../providers/simu/simu';
 })
 export class FlexInput implements AfterViewInit, OnChanges {
   menuCurrent: any = {};
+  dataCurrent: any;
   form: any;
   selectedForm: any;
   selectedFields: any;
+  dataNonInput: any = {};
   @Input() idPage: any;
   @Input() idMenu: any;
   @Input() dataIn: any;
@@ -53,6 +55,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
   *    - default value , initialized from the synchronised folder
   * ======================================================================= */
   loadForm(dataForm) {
+    this.dataCurrent = dataForm;
     // Get Info about menu
     this.paramsApi.loadMenu().then(menu => {
       this.menuCurrent = menu[this.idMenu - 1];
@@ -90,7 +93,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
         value: question['_value']
       });
     }
-    let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm };
+    let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm, extraData:this.dataNonInput };
     this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
     this.events.publish('rdvSave', this.dataIn);
     this.events.publish('rdvStatus_' + this.idPage, { idPage: this.idPage, form: this.selectedForm, status: formStatus });
@@ -110,10 +113,11 @@ export class FlexInput implements AfterViewInit, OnChanges {
     */
   }
   openSimuData(idx, field, url) {
+    let me=this
     console.log("OPEN SIMU WITH DATA:", idx, field, url);
-    this.simu.callSimu({ rdvId: 10, dataIn: "toto" }).then(function (data) {
+    this.simu.callSimu({ rdvId: 10, dataIn: this.dataCurrent }).then(function (data) {
       url = data['urlNext'];
-      let idSimu = data['insert_id'];
+      me.dataNonInput['idSimu'] = data['insert_id'];
       let idField = idx;
       var options = {
         location: 'yes',

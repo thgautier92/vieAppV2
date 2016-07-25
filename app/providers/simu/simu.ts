@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers,RequestOptions } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 /*
@@ -20,9 +20,9 @@ export class Simu {
   callSimu(data) {
     return new Promise((resolve, reject) => {
       let url = this.rootUrl + "vie/simu";
-      if (!window['device']){
+      if (!window['device']) {
         console.log("Proxy CORS added for Web application");
-        url="/gsapi/vie/simu";    
+        url = "/gsapi/vie/simu";
       }
       // ***** To be modified for a specific target *****
       let dataCall: any = {
@@ -32,24 +32,54 @@ export class Simu {
       let user = "demo";
       let password = "demo";
       let credHeaders = new Headers();
-      credHeaders.append('Content-Type', 'application/json');
+      //credHeaders.append('Content-Type', 'application/json');
+      credHeaders.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
       credHeaders.append('Accept', 'application/json;charset=utf-8');
       credHeaders.append('Authorization', 'Basic ' + window.btoa(user + ':' + password))
       let options = new RequestOptions({ headers: credHeaders });
-      this.http.post(url, dataCall, options)
+      this.http.post(url, JSON.stringify(dataCall), options)
         .subscribe(res => {
           console.log("Post response", res);
-          resolve(res);
+          resolve(JSON.parse(res['_body']));
         }, error => {
           console.log("Post error", error);
-          if (typeof (error._body) === "string") {
-            reject(JSON.parse(error._body));
+          if (typeof (error['_body']) === "string") {
+            reject(JSON.parse(error['_body']));
           } else {
             reject({ error: "Erreur appel", reason: "Le service n'est pas disponible." });
           }
         });
     });
-
+  }
+  getSimu(id) {
+    return new Promise((resolve, reject) => {
+      let url = this.rootUrl + "vie/simu/";
+      if (!window['device']) {
+        console.log("Proxy CORS added for Web application");
+        url = "/gsapi/vie/simu";
+      }
+      // ***** To be modified for a specific target *****
+      let user = "demo";
+      let password = "demo";
+      let credHeaders = new Headers();
+      //credHeaders.append('Content-Type', 'application/json');
+      credHeaders.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+      credHeaders.append('Accept', 'application/json;charset=utf-8');
+      credHeaders.append('Authorization', 'Basic ' + window.btoa(user + ':' + password))
+      let options = new RequestOptions({ headers: credHeaders });
+      this.http.get(url+"/"+id,options)
+        .subscribe(res => {
+          console.log("Get response", res);
+          resolve(JSON.parse(res['_body']));
+        }, error => {
+          console.log("Get error", error);
+          if (typeof (error['_body']) === "string") {
+            reject(JSON.parse(error['_body']));
+          } else {
+            reject({ error: "Erreur appel", reason: "Le service n'est pas disponible." });
+          }
+        });
+    });
   }
 }
 

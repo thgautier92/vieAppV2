@@ -12,6 +12,7 @@ import {DiagConseilPage} from './diag-conseil/diag-conseil';
 import {DecouvertePage} from './decouverte/decouverte';
 import {SouscriptionPage} from './souscription/souscription';
 import {SignaturePage} from './signature/signature';
+import {SimulerPage} from './simuler/simuler';
 import {StartPage} from '../start/start';
 
 declare var PouchDB: any;
@@ -59,7 +60,7 @@ export class RdvPage {
     this.rdvMenu = [
       { "id": 1, "lib": "Recopier", "icon": "person", "page": null },
       { "id": 2, "lib": "Pièces", "icon": "home", "page": null },
-      { "id": 3, "lib": "action 3", "icon": "ribbon", "page": null },
+      { "id": 3, "lib": "Simuler", "icon": "ribbon", "page": SimulerPage },
     ];
     // ===== Events operation on page =====
     events.subscribe('rdvSave', eventData => {
@@ -136,6 +137,6 @@ export class RdvPage {
   };
   // Navigation Menu
   callMenu(item) {
-    this.nav.push(item.page);
+    this.nav.push(item.page,this.currentContext);
   }
 }
