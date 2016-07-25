@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Platform, NavController, NavParams, Events, Tabs, MenuController } from 'ionic-angular';
+import { Platform, NavController, Modal, NavParams, Events, Tabs, MenuController } from 'ionic-angular';
 import { FORM_DIRECTIVES,
   NgForm, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
@@ -13,6 +13,7 @@ import {DecouvertePage} from './decouverte/decouverte';
 import {SouscriptionPage} from './souscription/souscription';
 import {SignaturePage} from './signature/signature';
 import {SimulerPage} from './simuler/simuler';
+import {OptionCopierPage} from './option-copier/option-copier';
 import {StartPage} from '../start/start';
 
 declare var PouchDB: any;
@@ -58,9 +59,9 @@ export class RdvPage {
       { "id": 4, "status": "hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage},
     ]
     this.rdvMenu = [
-      { "id": 1, "lib": "Recopier", "icon": "person", "page": null },
+      { "id": 1, "lib": "Recopier", "icon": "copy", "page": OptionCopierPage },
       { "id": 2, "lib": "Pièces", "icon": "home", "page": null },
-      { "id": 3, "lib": "Simuler", "icon": "ribbon", "page": SimulerPage },
+      { "id": 3, "lib": "Simuler", "icon": "calculator", "page": SimulerPage },
     ];
     // ===== Events operation on page =====
     events.subscribe('rdvSave', eventData => {
@@ -137,6 +138,8 @@ export class RdvPage {
   };
   // Navigation Menu
   callMenu(item) {
-    this.nav.push(item.page,this.currentContext);
+    let modal = Modal.create(item.page,this.currentContext);
+    this.nav.present(modal);
+    //this.nav.push(item.page,this.currentContext);
   }
 }
