@@ -7,16 +7,16 @@
 <div>
   <form (ngSubmit)="onSubmit()" [(ngFormModel)]="form" class="css-form">
     <ion-toolbar position="top">
-      <ion-title>{{menuCurrent.lib}}</ion-title>
+      <ion-title start>{{menuCurrent.lib}}</ion-title>
       <ion-buttons end>
-        <button>Etat de votre saisie : {{menuCurrent.status}}</button>
+        <!--<button>Etat de votre saisie : {{menuCurrent.status}}</button> -->
         <button danger (click)="diagNext('hold',$event)"><ion-icon name="square"></ion-icon></button>
         <button favorite (click)="diagNext('partial',$event)"><ion-icon name="pause"></ion-icon></button>
         <button secondary (click)="diagNext('completed',$event)"><ion-icon name="play"></ion-icon></button>
       </ion-buttons>
     </ion-toolbar>
     <ion-row wrap>
-      <ion-col  *ngFor="let key of selectedFields | keys">
+      <ion-col wrap *ngFor="let key of selectedFields | keys">
         <ion-card>
           <ion-card-header>{{key.key}}</ion-card-header>
           <ion-list>
@@ -29,7 +29,7 @@
                   'ion-md-call': field.type=='tel',
                   'ion-md-mail' : field.type=='email',
                   'ion-md-wifi' : field.type=='url',
-                  'ion-md-cloud-upload' : field.type=='urlData'}" (click)="initField(item.model)">
+                  'ion-md-cloud-upload' : field.type=='urlData'}" (click)="initField(idx, field.model)">
               </ion-icon>
               <ion-label stacked>{{field.title}}</ion-label>
               <ion-input *ngIf="field.type=='number'" type="number" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"

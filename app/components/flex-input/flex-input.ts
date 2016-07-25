@@ -36,18 +36,19 @@ export class FlexInput implements AfterViewInit, OnChanges {
   }
   ngAfterViewInit() {
     console.log("!! Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
+    this.dataCurrent = this.dataIn;
     this.loadForm(this.dataIn['clients'][this.idClient]['client']['output'][0]);
   };
   ngOnChanges(changes: any) {
     //console.log("Data Changes",changes);
     this.idClient = changes.idClient.currentValue;
-    let d = {};
+
     if (changes['dataIn']) {
-      d = changes.dataIn.currentValue;
+      this.dataCurrent = changes.dataIn.currentValue;
     } else {
-      d = this.dataIn;
+      this.dataCurrent = this.dataIn;
     }
-    this.loadForm(d['clients'][this.idClient]['client']['output'][0]);
+    this.loadForm(this.dataCurrent['clients'][this.idClient]['client']['output'][0]);
   };
   /* ======================================================================
   * Create a form component with 
@@ -55,7 +56,6 @@ export class FlexInput implements AfterViewInit, OnChanges {
   *    - default value , initialized from the synchronised folder
   * ======================================================================= */
   loadForm(dataForm) {
-    this.dataCurrent = dataForm;
     // Get Info about menu
     this.paramsApi.loadMenu().then(menu => {
       this.menuCurrent = menu[this.idMenu - 1];
@@ -73,6 +73,27 @@ export class FlexInput implements AfterViewInit, OnChanges {
       console.error("Impossible de lire le formulaire", this.idMenu);
       console.error(error);
     });
+  }
+  initAllFields(){
+    
+  }
+  initField(idx, modelField) {
+    // Init field with data already modified
+    //console.log("Load data from current value", this.dataCurrent, modelField);
+    let previousData = this.dataIn['rdv']['resultByClient'][this.idClient]['forms'];
+    let previousValue=null;
+    previousData.forEach(function (f) {
+      let model = f['formInput'].filter(item => item['model'] === modelField);
+      console.log(model);
+      if (model.length > 0) {
+        console.log(model[0].value);
+        previousValue=model[0].value;
+      }
+    });
+    if (previousValue){
+      console.log(this.selectedForm);
+      this.selectedForm['fields'][idx]['value']=previousValue;
+    }
   }
   // Validation form
   diagNext(formStatus, evt) {
@@ -93,11 +114,12 @@ export class FlexInput implements AfterViewInit, OnChanges {
         value: question['_value']
       });
     }
-    let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm, extraData:this.dataNonInput };
+    let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm, extraData: this.dataNonInput };
     this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
     this.events.publish('rdvSave', this.dataIn);
     this.events.publish('rdvStatus_' + this.idPage, { idPage: this.idPage, form: this.selectedForm, status: formStatus });
   }
+  // ===== External Simulator with params ====
   openSimu(url) {
     console.log("Open url", url);
     var options = {
@@ -113,7 +135,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
     */
   }
   openSimuData(idx, field, url) {
-    let me=this
+    let me = this
     console.log("OPEN SIMU WITH DATA:", idx, field, url);
     this.simu.callSimu({ rdvId: 10, dataIn: this.dataCurrent }).then(function (data) {
       url = data['urlNext'];
@@ -127,11 +149,12 @@ export class FlexInput implements AfterViewInit, OnChanges {
       window.open(url, "_system");
     });
   }
+
   onSubmit() {
     //console.log("Submit Form", this.form);
   }
 }
-// ===== Validators method =====
+// ===== Validators method ===================
 interface ValidationResult {
   [key: string]: boolean;
 }
@@ -191,4 +214,4 @@ export class ValidationService {
     }
   }
 }
-// ===== End Validators method =====
+// ===== End Validators method ===============

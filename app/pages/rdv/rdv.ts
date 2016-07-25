@@ -73,6 +73,10 @@ export class RdvPage {
       let m = this.dataMenu.filter(item => item['id'] === idMenu);
       m[0]['status'] = eventData[0]['status'];
     });
+    events.subscribe('copyClientChange', eventData => {
+      console.log("Update status menu", eventData);
+      this.getRdv(eventData[0]['id'])
+    });
   }
   ngAfterViewInit() {
     this.getRdv(this.rdvId);
