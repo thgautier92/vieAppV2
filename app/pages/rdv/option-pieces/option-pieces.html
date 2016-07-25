@@ -1,0 +1,40 @@
+<!--
+  Generated template for the OptionPiecesPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-navbar danger>
+  <ion-title>
+    <ion-icon name="copy"></ion-icon> Justificatifs</ion-title>
+  <ion-buttons end>
+    <button (click)="close()">Fermer</button>
+  </ion-buttons>
+</ion-navbar>
+
+
+<ion-content padding class="option-pieces">
+  <ion-list>
+    <ion-item>
+      <ion-label stacked>Client </ion-label>
+      <ion-select [(ngModel)]="cible" cancelText="Annuler" okText="Ok">
+        <ion-option value=null>== Choisir une cible ==</ion-option>
+        <ion-option *ngFor="let b of lstCible | objToArray" [value]="b.key">{{b.value['client']['output'][0]['NOM']}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Type de pieces</ion-label>
+      <ion-select [(ngModel)]="nature" cancelText="Annuler" okText="Ok" (ngModelChange)="natureChange($event)">
+        <ion-option value="">== Choisir la piece ==</ion-option>
+        <ion-option *ngFor="let n of lstNatureInfo" [value]="n.code">{{n.lib}}</ion-option>
+      </ion-select>
+    </ion-item>
+    
+      
+      <button fab fab-bottom fab-center (click)="takePhoto()"><ion-icon name="camera"></ion-icon></button>
+    
+
+      <button fab fab-right (click)="takeMail()"><ion-icon name="mail"></ion-icon></button>
+
+  </ion-list>
+</ion-content>

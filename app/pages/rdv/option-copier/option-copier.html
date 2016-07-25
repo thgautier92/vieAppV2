@@ -29,11 +29,12 @@
     </ion-item>
     <ion-item>
       <ion-label stacked>Nature d'information à recopier</ion-label>
-      <ion-select [(ngModel)]="nature" cancelText="Annuler" okText="Ok" (ngModelChange)="cibleChange($event)">
+      <ion-select [(ngModel)]="nature" cancelText="Annuler" okText="Ok" (ngModelChange)="natureChange($event)">
         <ion-option value="">== Choisir la nature ==</ion-option>
         <ion-option *ngFor="let n of lstNatureInfo" [value]="n.code">{{n.lib}}</ion-option>
       </ion-select>
     </ion-item>
+    
   </ion-list>
   <ion-list *ngIf="lstfields">
     <ion-card *ngFor="let form of lstfields">

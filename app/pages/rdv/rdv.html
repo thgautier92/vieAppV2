@@ -3,7 +3,7 @@ Rdv Main Page
 -->
 <ion-menu type="overlay" primary id="menuCli" [content]="contentRdv" side="right">
   <ion-toolbar primary>
-    <ion-title>Dossiers du RDV</ion-title>
+    <ion-title><ion-icon name="people"></ion-icon> Dossiers du RDV</ion-title>
     <ion-buttons start>
       <button menuClose="menuCli">Fermer</button>
     </ion-buttons>
@@ -21,7 +21,7 @@ Rdv Main Page
 </ion-menu>
 <ion-menu type="overlay" danger id="menuRdv" [content]="contentRdv" side="right">
   <ion-toolbar danger>
-    <ion-title>Options</ion-title>
+    <ion-title><ion-icon name="options"></ion-icon> Options</ion-title>
     <ion-buttons start>
       <button menuClose="menuRdv">Fermer</button>
     </ion-buttons>
@@ -39,7 +39,7 @@ Rdv Main Page
     <ion-title>Rdv #{{rdvId}} - {{titleRdv}}</ion-title>
     <button start menuToggle><ion-icon name="menu"></ion-icon></button>
     <button end menuToggle="menuCli"><ion-icon name="people"></ion-icon></button>
-    <button end menuToggle="menuRdv"><ion-icon name="more"></ion-icon></button>
+    <button end menuToggle="menuRdv"><ion-icon name="options"></ion-icon></button>
   </ion-navbar>
   <ion-tabs #rdvTabs *ngIf="currentContext" tabbarPlacement="top" tabbarLayout="icon-left">
     <ion-tab *ngFor="let item of dataMenu, let i = index" secondary [tabIcon]="item.icon" [tabTitle]="item.lib" [root]="item.page"

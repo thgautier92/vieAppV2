@@ -14,6 +14,7 @@ import {SouscriptionPage} from './souscription/souscription';
 import {SignaturePage} from './signature/signature';
 import {SimulerPage} from './simuler/simuler';
 import {OptionCopierPage} from './option-copier/option-copier';
+import {OptionPiecesPage} from './option-pieces/option-pieces';
 import {StartPage} from '../start/start';
 
 declare var PouchDB: any;
@@ -60,7 +61,7 @@ export class RdvPage {
     ]
     this.rdvMenu = [
       { "id": 1, "lib": "Recopier", "icon": "copy", "page": OptionCopierPage },
-      { "id": 2, "lib": "Pièces", "icon": "home", "page": null },
+      { "id": 2, "lib": "Pièces justificative", "icon": "camera", "page": OptionPiecesPage },
       { "id": 3, "lib": "Simuler", "icon": "calculator", "page": SimulerPage },
     ];
     // ===== Events operation on page =====
@@ -74,8 +75,8 @@ export class RdvPage {
       m[0]['status'] = eventData[0]['status'];
     });
     events.subscribe('copyClientChange', eventData => {
-      console.log("Update status menu", eventData);
-      this.getRdv(eventData[0]['id'])
+      console.log("copyClientChange", eventData);
+      this.start(+eventData[0]['id'])
     });
   }
   ngAfterViewInit() {
