@@ -98,7 +98,8 @@ export class RdvPage {
           clientPrenom: cli['client']['output'][0]['PRENOM'],
           etatVie: cli['client']['output'][0]['ETATVIE'],
           forms: [],
-          rdvStatus: false,
+          docs:[],
+          rdvStatus: false
         });
       }
       me.lstCli = me.currentRdv.rdv[idResult];

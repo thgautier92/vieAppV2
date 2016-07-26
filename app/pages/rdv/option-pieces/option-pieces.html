@@ -11,30 +11,34 @@
     <button (click)="close()">Fermer</button>
   </ion-buttons>
 </ion-navbar>
-
-
 <ion-content padding class="option-pieces">
-  <ion-list>
+  <ion-card>
+    <div class="image-container">
+      <img [src]="base64Image" class="image-scale">
+      <button fab fab-right fab-top class="fab-map" (click)="takePhoto()"><ion-icon name="camera"></ion-icon></button>
+      <button fab fab-left fab-top class="fab-map" (click)="takeMail()"><ion-icon name="mail"></ion-icon></button>
+    </div>
     <ion-item>
-      <ion-label stacked>Client </ion-label>
-      <ion-select [(ngModel)]="cible" cancelText="Annuler" okText="Ok">
-        <ion-option value=null>== Choisir une cible ==</ion-option>
-        <ion-option *ngFor="let b of lstCible | objToArray" [value]="b.key">{{b.value['client']['output'][0]['NOM']}}</ion-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-label stacked>Type de pieces</ion-label>
+      <ion-icon name="photo" item-left large></ion-icon>
+      <ion-label stacked>Nature de la pièce</ion-label>
       <ion-select [(ngModel)]="nature" cancelText="Annuler" okText="Ok" (ngModelChange)="natureChange($event)">
         <ion-option value="">== Choisir la piece ==</ion-option>
         <ion-option *ngFor="let n of lstNatureInfo" [value]="n.code">{{n.lib}}</ion-option>
       </ion-select>
     </ion-item>
-    
-      
-      <button fab fab-bottom fab-center (click)="takePhoto()"><ion-icon name="camera"></ion-icon></button>
-    
-
-      <button fab fab-right (click)="takeMail()"><ion-icon name="mail"></ion-icon></button>
-
-  </ion-list>
+    <h3>
+      <ion-icon name="people"></ion-icon>Clients à affecter
+    </h3>
+    <ion-list>
+      <ion-item *ngFor="let cible of lstCible">
+        <ion-label>{{cible.name}}</ion-label>
+        <ion-checkbox [(ngModel)]="cible.sel"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+    <ion-item>
+      <button primary item-right (click)="execute()">
+        <ion-icon name="save"></ion-icon>Affecter la pièce
+      </button>
+    </ion-item>
+  </ion-card>
 </ion-content>
