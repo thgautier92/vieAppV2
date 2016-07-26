@@ -23,10 +23,6 @@
     {
       "path": "/gsapi",
       "proxyUrl": "http://gautiersa.fr/apps/api/v2"
-    },
-    {
-      "path": "/couchDb",
-      "proxyUrl": "http://tgautier:Tga051163@gautiersa.fr:81"
     }
   ]
 }
