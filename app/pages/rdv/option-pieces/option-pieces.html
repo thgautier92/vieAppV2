@@ -26,9 +26,9 @@
         <ion-option *ngFor="let n of lstNatureInfo" [value]="n.code">{{n.lib}}</ion-option>
       </ion-select>
     </ion-item>
-    <h3>
-      <ion-icon name="people"></ion-icon>Clients à affecter
-    </h3>
+    <h2>
+      <ion-icon name="people"></ion-icon> Pièce à affecter aux clients
+    </h2>
     <ion-list>
       <ion-item *ngFor="let cible of lstCible">
         <ion-label>{{cible.name}}</ion-label>

@@ -24,11 +24,7 @@ export class Pouch {
   }
   getDoc(id) {
     return new Promise((resolve, reject) => {
-
-    });
-    db.get(id).then(function (doc) {
-  console.log(doc);
-});
+    })
   }
 
 }
