@@ -74,25 +74,25 @@ export class FlexInput implements AfterViewInit, OnChanges {
       console.error(error);
     });
   }
-  initAllFields(){
-    
+  initAllFields() {
+
   }
   initField(idx, modelField) {
     // Init field with data already modified
     //console.log("Load data from current value", this.dataCurrent, modelField);
     let previousData = this.dataIn['rdv']['resultByClient'][this.idClient]['forms'];
-    let previousValue=null;
+    let previousValue = null;
     previousData.forEach(function (f) {
       let model = f['formInput'].filter(item => item['model'] === modelField);
       console.log(model);
       if (model.length > 0) {
         console.log(model[0].value);
-        previousValue=model[0].value;
+        previousValue = model[0].value;
       }
     });
-    if (previousValue){
+    if (previousValue) {
       console.log(this.selectedForm);
-      this.selectedForm['fields'][idx]['value']=previousValue;
+      this.selectedForm['fields'][idx]['value'] = previousValue;
     }
   }
   // Validation form
@@ -137,18 +137,18 @@ export class FlexInput implements AfterViewInit, OnChanges {
   openSimuData(idx, field, url) {
     let me = this
     console.log("OPEN SIMU WITH DATA:", idx, field, url);
-    this.simu.callSimu({ rdvId: 10, dataIn: this.dataCurrent }).then(function (data) {
+    this.simu.callSimu({ rdvId: 10, dataIn: this.dataCurrent }).then(data=> {
+      console.log(data)
       url = data['urlNext'];
       me.dataNonInput['idSimu'] = data['insert_id'];
       let idField = idx;
-      var options = {
-        location: 'yes',
-        clearcache: 'yes',
-        toolbar: 'yes'
-      };
-      window.open(url, "_system");
+      let options = "location=yes,clearcache=yes,toolbar=yes"
+      let ref = window.open(url, "_system", options);
+    },error=>{
+      console.log(error);
     });
   }
+
 
   onSubmit() {
     //console.log("Submit Form", this.form);

@@ -19,7 +19,7 @@ export class Simu {
 
   callSimu(data) {
     return new Promise((resolve, reject) => {
-      let url = this.rootUrl + "vie/simu";
+      let url = this.rootUrl + "/vie/simu";
       if (!window['device']) {
         console.log("Proxy CORS added for Web application");
         url = "/gsapi/vie/simu";
@@ -42,7 +42,7 @@ export class Simu {
           console.log("Post response", res);
           resolve(JSON.parse(res['_body']));
         }, error => {
-          console.log("Post error", error);
+          console.log("Post error", JSON.stringify(error));
           if (typeof (error['_body']) === "string") {
             reject(JSON.parse(error['_body']));
           } else {
@@ -53,7 +53,7 @@ export class Simu {
   }
   getSimu(id) {
     return new Promise((resolve, reject) => {
-      let url = this.rootUrl + "vie/simu/";
+      let url = this.rootUrl + "/vie/simu/";
       if (!window['device']) {
         console.log("Proxy CORS added for Web application");
         url = "/gsapi/vie/simu";
