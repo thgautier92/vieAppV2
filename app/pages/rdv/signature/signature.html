@@ -6,4 +6,31 @@
 -->
 <ion-content padding class="signature">
   <flex-input *ngFor="let f of lstForms" [idPage]=idPage [idMenu]=f.id [dataIn]=dataIn [idClient]=idClient></flex-input>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-item>
+        <ion-select [(ngModel)]="srv" cancelText="Annuler" okText="Choisir!">
+          <ion-option value="">== Choisir un service ==</ion-option>
+          <ion-option *ngFor="let item of lstSign" [value]="item">{{item}}</ion-option>
+        </ion-select>
+        <ion-label>Signature avec le fournisseur</ion-label>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <button (click)="startIdNum()">1. Création de l'identité numérique</button>
+        <button (click)="startSign()">2. Envoie du document ou des données pour signature</button>
+        <button (click)="loadDocSign()">3. Récupération du document signé</button>
+        <button (click)="loadProofSign()">4. Recupération de la preuve</button>
+      </ion-item>
+      <ion-list-header>
+        Informations retournées
+      </ion-list-header>
+      <ion-item>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+
 </ion-content>
