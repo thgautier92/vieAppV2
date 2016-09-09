@@ -26,14 +26,14 @@ export class SignServices {
           "password": "Tga051163",
           "integratorKey": "TEST-43dd500e-9abc-42da-8beb-3d3f14698fbd",
           "account": "1549349"
-        }
+        }, "api": [{ "id": 1, "lib": "Identité numérique", "url": "" }]
       },
-      { "serv": "univerSign", "params": {} },
-      { "serv": "docaPost", "params": {} }];
+      { "serv": "univerSign", "params": {}, "api": [] },
+      { "serv": "docaPost", "params": {}, "api": [] }];
   }
   getLstParams() {
     return new Promise((resolve, reject) => {
-      let lst=[];
+      let lst = [];
       this.params.forEach(element => {
         console.log(element);
         lst.push(element['serv']);
