@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, RequestOptions, Headers } from '@angular/http';
+import { Platform } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 
 /*
@@ -16,7 +17,7 @@ export class SignServices {
   rootApi: any;
   httpApi: any;
   params: any;
-  constructor(private http: Http) {
+  constructor(private http: Http, private platform: Platform) {
     this.params = [
       {
         "serv": "docuSign", "params": {
@@ -24,9 +25,13 @@ export class SignServices {
           "corsApi": "/docuSign/restApi/v2",
           "email": "thierry_gautier@groupe-sma.fr",
           "password": "Tga051163",
-          "integratorKey": "TEST-43dd500e-9abc-42da-8beb-3d3f14698fbd",
-          "account": "1549349"
-        }, "api": [{ "id": 1, "lib": "Identité numérique", "url": "" }]
+          "key": "TEST-43dd500e-9abc-42da-8beb-3d3f14698fbd",
+          "account": "1549349",
+          "auth": "<DocuSignCredentials><Username>#email#</Username><Password>#password#</Password><IntegratorKey>#key#</IntegratorKey></DocuSignCredentials>"
+        }, "api": [
+          { "id": "login", "lib": "Login", "url": "login_information?api_password=false&include_account_id_guid=true&login_settings=all" },
+          { "id": "listTemplate", "lib": "Liste des templates", "url": "accounts/#account#/templates" },
+          { "id": 1, "lib": "Identité numérique", "url": "" }]
       },
       { "serv": "univerSign", "params": {}, "api": [] },
       { "serv": "docaPost", "params": {}, "api": [] }];
@@ -35,35 +40,51 @@ export class SignServices {
     return new Promise((resolve, reject) => {
       let lst = [];
       this.params.forEach(element => {
-        console.log(element);
         lst.push(element['serv']);
       });
       resolve(lst);
     });
   }
-  getSrv(srv) {
-    this.rootApi = "";
-    this.httpApi = {};
-    this.loadRootApi(srv).then(response => {
-      console.log(response);
-      this.rootApi = response;
-      //load Http header
-      this.loadHeader(srv).then(response => {
-        this.httpApi = response;
-      }, error => {
-        console.log("Unable to load HEADER " + srv);
-      });
-    }, error => {
-      console.log("Unable to load API " + srv);
+  getParam(srv) {
+    return new Promise((resolve, reject) => {
+      let param = this.params.filter(item => item['serv'] === srv);
+      if (param.length > 0) {
+        resolve(param[0]['params']);
+      } else {
+        reject("Fournisseur inconnu");
+      }
+    });
+  }
+  getApi(srv, idApi?) {
+    return new Promise((resolve, reject) => {
+      let param = this.params.filter(item => item['serv'] === srv);
+      if (param.length > 0) {
+        if (idApi) {
+          // filter the api
+          let api = param[0]['api'].filter(item => item['id'] === idApi);
+          if (api.length > 0) {
+            resolve(api[0]);
+          } else {
+            reject("Api inconnu");
+          }
+        } else {
+          resolve(param[0]['api']);
+        }
+      } else {
+        reject("Fournisseur inconnu");
+      }
     });
   }
   loadRootApi(srv) {
     return new Promise((resolve, reject) => {
       let root = "";
       let param = this.params.filter(item => item['serv'] === srv);
-      console.log(param)
       if (param.length > 0) {
-        resolve(param[0])
+        if (this.platform.is('cordova')) {
+          resolve(param[0]['params']['rootApi']);
+        } else {
+          resolve(param[0]['params']['corsApi']);
+        }
       } else {
         reject("Fournisseur inconnu");
       }
@@ -71,25 +92,78 @@ export class SignServices {
   };
   loadHeader(srv) {
     return new Promise((resolve, reject) => {
-      let header = "";
-      let http = {};
-      http = {
-        cache: false,
-        headers: { 'Content-Type': 'application/json; charset=utf-8', 'X-DocuSign-Authentication': header }
-      };
-      resolve(http);
+      var header = new Headers();
+      header.append('Content-Type', 'application/json; charset=utf-8');
+      this.getParam(srv).then(response => {
+        var auth = response['auth'];
+        auth = auth.replace("#email#", response['email']);
+        auth = auth.replace("#password#", response['password']);
+        auth = auth.replace("#key#", response['key']);
+        //console.log("AUTH", auth);
+        header.append('X-DocuSign-Authentication', auth);
+        //header.append('withCredentials','true');
+        resolve(header);
+      }, error => {
+        reject(error);
+      });
     })
   };
-  load(srv) {
+  getService(srv) {
+    let api = {};
     return new Promise((resolve, reject) => {
-      this.getSrv(srv);
-      this.http.get(this.rootApi)
-        .map(res => res.json())
-        .subscribe(data => {
-          resolve(data);
+      // get the Root Url
+      this.loadRootApi(srv).then(response => {
+        console.log(response);
+        api['url'] = response;
+        //load Http header
+        this.loadHeader(srv).then(response => {
+          console.log("HEADER", response);
+          api['header'] = response;
+          resolve(api);
         }, error => {
-          reject(error);
+          console.log("Unable to load HEADER " + srv, error);
+          reject({});
         });
+      }, error => {
+        console.log("Unable to load API " + srv);
+        reject({});
+      });
+    });
+  }
+  callApi(srv, idApi) {
+    return new Promise((resolve, reject) => {
+      // Load params
+      this.getParam(srv).then(apiParam => {
+        //console.log("PARAMS", apiParam);
+        // Load service
+        this.getService(srv).then(api => {
+          //console.log("SERVICE", api);
+          var options = new RequestOptions({
+            headers: api['header']
+          });
+          // get Api info
+          this.getApi(srv, idApi).then(apiResponse => {
+            //console.log("API", api);
+            let apiUrl = apiResponse['url'];
+            apiUrl = apiUrl.replace("#account#", apiParam['account']);
+            //Call API
+            this.http.get(api['url'] + "/" + apiUrl, options)
+              .map(res => res.json())
+              .subscribe(data => {
+                resolve(data);
+              }, error => {
+                console.log("GET error", error);
+                reject(error);
+              });
+          }, apiError => {
+            reject(apiError);
+          });
+        }, error => {
+          console.log("Api Call", error);
+        });
+      }, apiParamError => {
+        reject("Fournisseur inconnu");
+      });
     });
   }
 }

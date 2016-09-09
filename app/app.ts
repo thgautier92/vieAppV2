@@ -5,6 +5,7 @@ import {CouchDbServices} from './providers/couch/couch';
 import {HomePage} from './pages/home/home';
 import {AuthPage} from './pages/auth/auth';
 import {SynchroPage} from './pages/synchro/synchro';
+import {SignApiPage} from './pages/sign-api/sign-api';
 
 
 @Component({
@@ -35,7 +36,8 @@ class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'Acceuil', component: HomePage, icon: "home" },
-      { title: 'Synchronisation', component: SynchroPage, icon: "sync" }
+      { title: 'Synchronisation', component: SynchroPage, icon: "sync" },
+      { title: 'Outil de signature', component: SignApiPage, icon: "pencil" }
     ];
   }
 

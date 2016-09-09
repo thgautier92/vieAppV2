@@ -54,8 +54,13 @@ export class SignaturePage {
       this.lstSign = response;
     })
   }
-  startIdNum(){
-
+  startIdNum() {
+    console.log("Start call " + this.srv);
+    this.sign.callApi(this.srv, "listTemplate").then(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    })
   }
   startSign() {
     this.sign.loadRootApi(this.srv).then(response => {
@@ -64,10 +69,10 @@ export class SignaturePage {
       console.log(error);
     });
   }
-  loadDocSign(){
+  loadDocSign() {
 
   }
-  loadProofSign(){
+  loadProofSign() {
 
   }
 
