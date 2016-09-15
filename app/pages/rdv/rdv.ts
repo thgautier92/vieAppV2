@@ -61,7 +61,7 @@ export class RdvPage {
     ]
     this.rdvMenu = [
       { "id": 1, "lib": "Recopier", "icon": "copy", "page": OptionCopierPage },
-      { "id": 2, "lib": "Pièces justificative", "icon": "camera", "page": OptionPiecesPage },
+      { "id": 2, "lib": "Pièces justificatives", "icon": "camera", "page": OptionPiecesPage },
       { "id": 3, "lib": "Simuler", "icon": "calculator", "page": SimulerPage },
     ];
     // ===== Events operation on page =====
@@ -103,7 +103,8 @@ export class RdvPage {
         });
       }
       me.lstCli = me.currentRdv.rdv[idResult];
-      //console.log("Current RDV", me.currentRdv);
+      console.log("Current RDV", me.currentRdv);
+      me.start(0);
     }).catch(function (error) {
       console.error(error);
     });

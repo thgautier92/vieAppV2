@@ -38,7 +38,8 @@ export class OptionPiecesPage {
     this.lstNatureInfo = [
       { "code": "cni", "lib": "Carte d'identité Nationale" },
       { "code": "passport", "lib": "Passport" },
-      { "code": "auto", "lib": "Permis de conduire" }
+      { "code": "permisauto", "lib": "Permis de conduire" },
+      { "code": "livretfam", "lib": "Livret de famille" }
     ]
   }
   close() {
@@ -46,7 +47,8 @@ export class OptionPiecesPage {
   }
   natureChange(idx) { }
   takePhoto() {
-    let options = {};
+    let srcType = Camera.PictureSourceType.CAMERA;
+    let options = setOptions(srcType);
     let me=this;
     try {
       Camera.getPicture(options).then((imageData) => {
@@ -81,4 +83,18 @@ export class OptionPiecesPage {
     }
 
   }
+}
+function setOptions(srcType) {
+    var options = {
+        // Some common settings are 20, 50, and 100
+        quality: 50,
+        destinationType: Camera.DestinationType.FILE_URI,
+        // In this app, dynamically set the picture source, Camera or photo gallery
+        sourceType: srcType,
+        encodingType: Camera.EncodingType.JPEG,
+        mediaType: Camera.MediaType.PICTURE,
+        allowEdit: true,
+        correctOrientation: true  //Corrects Android orientation quirks
+    }
+    return options;
 }

@@ -26,7 +26,7 @@ export class Simu {
       }
       // ***** To be modified for a specific target *****
       let dataCall: any = {
-        "rdvId": data.rdvId,
+        "rdvId": data['rdvId'],
         "dataIn": JSON.stringify(data)
       };
       let user = "demo";
@@ -39,7 +39,7 @@ export class Simu {
       let options = new RequestOptions({ headers: credHeaders });
       this.http.post(url, JSON.stringify(dataCall), options)
         .subscribe(res => {
-          console.log("Post response", res);
+          //console.log("Post response", res);
           resolve(JSON.parse(res['_body']));
         }, error => {
           console.log("Post error", JSON.stringify(error));
@@ -69,7 +69,7 @@ export class Simu {
       let options = new RequestOptions({ headers: credHeaders });
       this.http.get(url+"/"+id,options)
         .subscribe(res => {
-          console.log("Get response", res);
+          //console.log("Get response", res);
           resolve(JSON.parse(res['_body']));
         }, error => {
           console.log("Get error", error);

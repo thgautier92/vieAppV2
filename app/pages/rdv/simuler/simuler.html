@@ -12,7 +12,7 @@
 </ion-navbar>
 <ion-content class="souscription">
   <flex-input *ngFor="let f of lstForms" [idPage]=idPage [idMenu]=f.id [dataIn]=dataIn [idClient]=idClient></flex-input>
-  <h4 *ngIf="idSimu">#Simulation : {{idSimu}}, le {{dataSimu.dateSimu}}</h4>
+  <h4 *ngIf="dataSimu.idSimu">#Simulation : {{dataSimu.idSimu}}, le {{dataSimu.dateSimu}}</h4>
   <ion-card *ngFor="let item of dataSimu.data">
     <img [src]="item.graph" />
     <ion-card-content>

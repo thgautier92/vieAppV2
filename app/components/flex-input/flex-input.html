@@ -43,7 +43,8 @@
               <ion-input *ngIf="field.type=='email'" type="{{field.type}}" [ngControl]="field.model" primary name="input_{{field.model}}"
                 [(ngModel)]="field.value" clearInput></ion-input>
               <button outline item-right *ngIf="field.type=='url'" (click)="openSimu(field.default)"><ion-icon name="wifi"></ion-icon> démarrer</button>
-              <button outline item-right *ngIf="field.type=='urlData'" (click)="openSimuData(idx,field.model,field.default)"><ion-icon name="connection-bars"></ion-icon> démarrer</button>
+              <button outline item-right *ngIf="field.type=='urlData'" (click)="openSimuData(idx,field.model,field.default)"><ion-icon name="wifi"></ion-icon> démarrer</button>
+              <button outline item-right *ngIf="field.type=='urlData'" (click)="getSimuData()"><ion-icon name="wifi"></ion-icon> Voir les resultats</button>
 
               <ion-toggle *ngIf="field.type=='boolean'" checked="false" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"></ion-toggle>
 

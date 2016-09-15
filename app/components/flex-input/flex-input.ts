@@ -27,12 +27,14 @@ export class FlexInput implements AfterViewInit, OnChanges {
   selectedForm: any;
   selectedFields: any;
   dataNonInput: any = {};
+  popupWindow: any;
   @Input() idPage: any;
   @Input() idMenu: any;
   @Input() dataIn: any;
   @Input() idClient: any;
   constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private simu: Simu, private events: Events) {
     this.form = this.fb.group({});
+    this.popupWindow = null;
   }
   ngAfterViewInit() {
     console.log("!! Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
@@ -42,7 +44,6 @@ export class FlexInput implements AfterViewInit, OnChanges {
   ngOnChanges(changes: any) {
     //console.log("Data Changes",changes);
     this.idClient = changes.idClient.currentValue;
-
     if (changes['dataIn']) {
       this.dataCurrent = changes.dataIn.currentValue;
     } else {
@@ -75,7 +76,6 @@ export class FlexInput implements AfterViewInit, OnChanges {
     });
   }
   initAllFields() {
-
   }
   initField(idx, modelField) {
     // Init field with data already modified
@@ -135,20 +135,36 @@ export class FlexInput implements AfterViewInit, OnChanges {
     */
   }
   openSimuData(idx, field, url) {
-    let me = this
+    let me = this;
     console.log("OPEN SIMU WITH DATA:", idx, field, url);
-    this.simu.callSimu({ rdvId: 10, dataIn: this.dataCurrent }).then(data=> {
-      console.log(data)
+    let rdvId = this.dataCurrent['rdv']['rdvId'];
+    this.simu.callSimu({ "rdvId": rdvId, "dataIn": this.dataCurrent }).then(data => {
+      //console.log("Data from simu",data)
       url = data['urlNext'];
       me.dataNonInput['idSimu'] = data['insert_id'];
       let idField = idx;
-      let options = "location=yes,clearcache=yes,toolbar=yes"
-      let ref = window.open(url, "_system", options);
-    },error=>{
+      let options = "location=yes,clearcache=yes,toolbar=yes,width=800,height=600";
+      if (this.popupWindow && !this.popupWindow.closed) {
+        this.popupWindow.doRefresh();
+      } else {
+        this.popupWindow = window.open(url, "SIMU", options);
+        this.popupWindow.focus();
+      }
+     me.events.publish("simuStart", data, this.popupWindow);
+    }, error => {
       console.log(error);
     });
   }
-
+  getSimuData() {
+     let me = this;
+    this.simu.getSimu(this.dataNonInput['idSimu']).then(data => {
+      console.log(data);
+      me.dataNonInput['simu']=data['results']['output'][0];
+      this.events.publish("simuDataLoaded", data['results']['output'][0]);
+    }, error => {
+      console.log(error);
+    })
+  }
 
   onSubmit() {
     //console.log("Submit Form", this.form);
