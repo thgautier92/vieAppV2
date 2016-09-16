@@ -25,7 +25,7 @@ export class DecouvertePage {
   constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
-    this.idPage = 1
+    this.idPage = 2
     this.idClient = this.params.data['currentCli'];
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};

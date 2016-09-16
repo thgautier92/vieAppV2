@@ -25,7 +25,7 @@ export class SouscriptionPage {
   constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
-    this.idPage = 3
+    this.idPage = 4
     this.idClient = this.params.data['currentCli'];
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};

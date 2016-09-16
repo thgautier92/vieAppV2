@@ -2,6 +2,7 @@ import { Component, Input} from '@angular/core';
 import { Page, NavController, NavParams, Events, Modal } from 'ionic-angular';
 import {CalcTools} from '../../comon/calculate'
 import {FlexInput} from '../../../components/flex-input/flex-input';
+import {FlexList} from '../../../components/flex-list/flex-list';
 
 /*
   Generated class for the DiagConseilPage page.
@@ -11,7 +12,7 @@ import {FlexInput} from '../../../components/flex-input/flex-input';
 */
 @Component({
   templateUrl: 'build/pages/rdv/concurrents/concurrents.html',
-  directives: [FlexInput],
+  directives: [FlexInput,FlexList],
   providers: [CalcTools],
 })
 export class ConcurrentsPage {
@@ -26,14 +27,14 @@ export class ConcurrentsPage {
   constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
-    this.idPage = 1
+    this.idPage = 4;
     this.idClient = this.params.data['currentCli'];
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 1, "status": "" },
+      { "id": 100, "status": "" }
     ];
-    this.lstConccurrents=[];
+    
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
       this.idClient = eventData[0]['currentCli'];
@@ -45,11 +46,10 @@ export class ConcurrentsPage {
       console.log("Update status form", this.lstForms, dataReturn);
       let idForm = dataReturn[0]['form']['id'];
       let f = this.lstForms.filter(item => item['id'] === idForm);
+      console.log(idForm,f);
       f[0]['status'] = dataReturn[0]['status'];
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
   }
-  addItem(){}
-  removeItem(){}
     
 }

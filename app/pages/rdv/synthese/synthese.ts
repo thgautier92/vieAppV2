@@ -31,6 +31,7 @@ export class SynthesePage {
     this.dataOut = {};
     this.lstForms = [
       { "id": 1, "status": "" },
+      { "id": 2, "status": "" },
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {

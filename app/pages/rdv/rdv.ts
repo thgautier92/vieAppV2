@@ -67,7 +67,7 @@ export class RdvPage {
       { "id": 2, "lib": "Pièces justificatives", "icon": "camera", "page": OptionPiecesPage },
       { "id": 3, "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage },
       { "id": 4, "lib": "Simuler", "icon": "calculator", "page": SimulerPage },
-      { "id": 5, "lib": "Souscription", "icon": "sign", "page": SouscriptionPage },
+      { "id": 5, "lib": "Souscription", "icon": "contract", "page": SouscriptionPage },
     ];
     // ===== Events operation on page =====
     events.subscribe('rdvSave', eventData => {
@@ -135,17 +135,17 @@ export class RdvPage {
   // Save data in PouchDb locally
   saveData(docPut) {
     return new Promise((resolve, reject) => {
-      console.log("RDV to save in Pouch", docPut);
+      console.log("==> RDV is being saved in Pouch", docPut);
       let id = docPut['_id'];
       this.db.get(id).then(docLocal => {
         //console.log(docLocal);
         let rev = docLocal['_rev'];
         let up = { _id: id, _rev: rev, clients: docPut['clients'], rdv: docPut['rdv'] };
         this.db.put(up).then(saveResponse => {
-          console.log(saveResponse);
+          console.log("==> RDV is saved successfully in Pouch",saveResponse);
           resolve(saveResponse)
         }, saveError => {
-          console.log(saveError);
+          console.log("==> Error saving the RDV in Pouch",saveError);
           reject(saveError);
         });
       }, error => {

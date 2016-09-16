@@ -3,7 +3,7 @@
         {
             "id": 1,
             "name": "client",
-            "title": "client",
+            "title": "Client",
             "icon": "body",
             "fields": [
                 {
@@ -848,7 +848,8 @@
                         "f1": "Fiscalité PEA",
                         "f2": "Fiscalité Hors PEA"
                     }
-                },{
+                },
+                {
                     "group": "Versement initial",
                     "model": "vsi_montant",
                     "title": "Montant",
@@ -861,7 +862,8 @@
                         1000,
                         20000
                     ]
-                },{
+                },
+                {
                     "group": "Versement initial",
                     "model": "vsi_date",
                     "title": "Date",
@@ -870,7 +872,8 @@
                     "readOnly": "false",
                     "error": "",
                     "type": "date"
-                },{
+                },
+                {
                     "group": "Versement initial",
                     "model": "vsi_paiement",
                     "title": "Mode de paiement",
@@ -882,9 +885,10 @@
                     "enum": {
                         "cheque": "Chèque",
                         "prelevement": "Prélévement",
-                        "virement":"Virement"
+                        "virement": "Virement"
                     }
-                },{
+                },
+                {
                     "group": "Versement programmé",
                     "model": "vsp_montant",
                     "title": "Montant",
@@ -897,7 +901,8 @@
                         1000,
                         10000
                     ]
-                },{
+                },
+                {
                     "group": "Versement programmé",
                     "model": "vsp_date",
                     "title": "Date",
@@ -906,7 +911,8 @@
                     "readOnly": "false",
                     "error": "",
                     "type": "date"
-                },{
+                },
+                {
                     "group": "Versement programmé",
                     "model": "vsp_periodicite",
                     "title": "Periodicité",
@@ -918,10 +924,11 @@
                     "enum": {
                         "m": "Mensuel",
                         "t": "Trimestriel",
-                        "s":"Semestriel",
-                        "a":"Annuel"
+                        "s": "Semestriel",
+                        "a": "Annuel"
                     }
-                },{
+                },
+                {
                     "group": "mandat SEPA",
                     "model": "sepa_iban",
                     "title": "IBAN",
@@ -930,8 +937,8 @@
                     "readOnly": "false",
                     "error": "",
                     "type": "text"
-                }
-                ,{
+                },
+                {
                     "group": "mandat SEPA",
                     "model": "sepa_bic",
                     "title": "BIC",
@@ -940,6 +947,49 @@
                     "readOnly": "false",
                     "error": "",
                     "type": "text"
+                }
+            ]
+        },
+        {
+            "id": 100,
+            "name": "Concurrents",
+            "title": "Concurrents",
+            "icon": "body",
+            "fields": [
+                {
+                    "group": "Concurrents",
+                    "model": "nom_concurrent",
+                    "title": "Nom de la compagnie d'assurance",
+                    "default": "",
+                    "required": "true",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "text"
+                },
+                {
+                    "group": "Concurrents",
+                    "model": "famprod_concurrent",
+                    "title": "Famille de produits",
+                    "default": "",
+                    "required": "true",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "enum",
+                    "enum": {
+                        "BR": "Batiretraite",
+                        "BP": "Batiprojet",
+                        "AU": "Autre"
+                    }
+                },
+                {
+                    "group": "Concurrents",
+                    "model": "echeance_concurrent",
+                    "title": "Echéance du contrat",
+                    "default": "",
+                    "required": "true",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "date"
                 }
             ]
         }

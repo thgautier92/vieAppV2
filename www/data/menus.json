@@ -9,5 +9,6 @@
     { "id": 8, "status": "Hold", "lib": "Pièces justificatives", "icon": "qr-scanner", "form":8 },
     { "id": 9, "status": "Hold", "lib": "Documents SMAVie", "icon": "document", "form":9 },
     { "id": 10, "status": "Hold", "lib": "Adhésion", "icon": "camera", "form":10},
-    { "id": 11, "status": "Hold", "lib": "Souscription", "icon": "camera", "form":11}
+    { "id": 11, "status": "Hold", "lib": "Souscription", "icon": "camera", "form":11},
+    { "id": 100, "status": "Hold", "lib": "Concurrents", "icon": "camera", "form":100}
 ]

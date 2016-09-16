@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, Input, Output, AfterViewInit, OnChanges} from '@angular/core';
+import { Component, ViewChild, ElementRef, Input, Output, OnInit, OnChanges} from '@angular/core';
 import {IONIC_DIRECTIVES, Platform, Events} from 'ionic-angular';
 import { FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl,
   NgSwitch, NgSwitchWhen, NgSwitchDefault} from '@angular/common';
@@ -20,12 +20,13 @@ import {Simu} from '../../providers/simu/simu';
   pipes: [groupBy, ValuesPipe, KeysPipe],
   providers: [Paramsdata, Simu]
 })
-export class FlexInput implements AfterViewInit, OnChanges {
+export class FlexInput implements OnInit, OnChanges {
   menuCurrent: any = {};
   dataCurrent: any;
+  okForm: boolean = false;
   form: any;
-  selectedForm: any;
-  selectedFields: any;
+  selectedForm: any = null;
+  selectedFields: any = null;
   dataNonInput: any = {};     // data added outside the generic form
   popupWindow: any = null;    // windows object, open for simulation
   simuExec: boolean = false;  // flag for exec simulation 
@@ -36,10 +37,19 @@ export class FlexInput implements AfterViewInit, OnChanges {
   constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private simu: Simu, private events: Events) {
     this.form = this.fb.group({});
   }
-  ngAfterViewInit() {
-    //console.log("!! Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
+  ngOnInit() {
+    console.log("==> Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
+    this.form = this.fb.group({});
     this.dataCurrent = this.dataIn;
-    this.loadForm(this.dataIn['clients'][this.idClient]['client']['output'][0]);
+    this.loadForm(this.idMenu, this.dataIn['clients'][this.idClient]['client']['output'][0]).then(response => {
+      console.log("==> Form created", response);
+      this.form = response['formGroup'];
+      this.selectedForm = response['selectedForm'];
+      this.selectedFields = response['selectedFields'];
+      this.okForm = true;
+    }, error => {
+      this.okForm = false;
+    });
   };
   ngOnChanges(changes: any) {
     //console.log("Data Changes",changes);
@@ -49,30 +59,32 @@ export class FlexInput implements AfterViewInit, OnChanges {
     } else {
       this.dataCurrent = this.dataIn;
     }
-    this.loadForm(this.dataCurrent['clients'][this.idClient]['client']['output'][0]);
+    this.loadForm(this.idMenu, this.dataIn['clients'][this.idClient]['client']['output'][0]).then(response => {
+      console.log(response);
+      this.form = response['formGroup'];
+      this.selectedForm = response['selectedForm'];
+      this.selectedFields = response['selectedFields'];
+      this.okForm = true;
+    }, error => {
+      this.okForm = false;
+    });
   };
   /* ======================================================================
   * Create a form component with 
   *    - all fields parameters and validation control
   *    - default value , initialized from the synchronised folder
   * ======================================================================= */
-  loadForm(dataForm) {
-    // Get Info about menu
-    this.paramsApi.loadMenu().then(menu => {
-      this.menuCurrent = menu[this.idMenu - 1];
-    });
-    //console.log("Data to inject in form",dataForm);
-    this.paramsApi.getForm(this.idMenu, dataForm).then(data => {
-      //console.log("== Return form data ", this.idMenu, data);
-      this.form = data['formGroup'];
-      this.selectedForm = data['form'];
-      // Group fields array
-      this.selectedFields = new groupBy().transform(this.selectedForm['fields'], 'group');
-      //this.selectedMenu.status = "Started";
-      //console.log("Display form", this.selectedForm, this.form, this.selectedFields)
-    }, error => {
-      console.error("Impossible de lire le formulaire", this.idMenu);
-      console.error(error);
+  loadForm(idForm, dataForm) {
+    return new Promise((resolve, reject) => {
+      this.paramsApi.getForm(idForm, dataForm).then(data => {
+        //console.log("== Return form data ", idForm, data);
+        let fields = new groupBy().transform(data['form']['fields'], 'group');
+        resolve({ "idForm": idForm, "formGroup": data['formGroup'], "selectedForm": data['form'], "selectedFields": fields })
+      }, error => {
+        console.error("Impossible de lire le formulaire", idForm);
+        console.error(error);
+        reject(error);
+      });
     });
   }
   initAllFields() {
@@ -114,7 +126,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
         value: question['_value']
       });
     }
-    let dForm = { "form": this.selectedForm['title'], "status": formStatus, "formInput": fForm,"extraData": this.dataNonInput};
+    let dForm = { "form": this.selectedForm['title'], "status": formStatus, "formInput": fForm, "extraData": this.dataNonInput };
     this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
     if (this.simuExec) {
       this.simu.getSimu(this.dataNonInput['idSimu']).then(data => {

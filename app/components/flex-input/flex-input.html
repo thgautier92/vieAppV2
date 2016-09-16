@@ -5,9 +5,9 @@
   for more info on Angular 2 Components.
 -->
 <div>
-  <form (ngSubmit)="onSubmit()" [(ngFormModel)]="form" class="css-form">
-    <ion-toolbar position="top">
-      <ion-title start>{{menuCurrent.lib}}</ion-title>
+  <form *ngIf="okForm" (ngSubmit)="onSubmit()" [(ngFormModel)]="form" class="css-form">
+    <ion-toolbar light position="top">
+      <ion-title start>{{selectedForm.title}}</ion-title>
       <ion-buttons end>
         <!--<button>Etat de votre saisie : {{menuCurrent.status}}</button> -->
         <button danger (click)="diagNext('hold',$event)"><ion-icon name="square"></ion-icon></button>
