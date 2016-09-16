@@ -8,8 +8,11 @@ import {CouchDbServices} from '../../providers/couch/couch';
 import {Paramsdata} from '../../providers/params-data/params-data';
 import {DisplayTools} from '../comon/display';
 
+import {SynthesePage} from './synthese/synthese';
 import {DiagConseilPage} from './diag-conseil/diag-conseil';
 import {DecouvertePage} from './decouverte/decouverte';
+import {PatrimoinePage} from './patrimoine/patrimoine';
+import {ConcurrentsPage} from './concurrents/concurrents';
 import {SouscriptionPage} from './souscription/souscription';
 import {SignaturePage} from './signature/signature';
 import {SimulerPage} from './simuler/simuler';
@@ -35,7 +38,7 @@ export class RdvPage {
   refStatus: any = []
   currentRdv: any = {};
   currentCli: any = null;
-  titleRdv:any = "";
+  titleRdv: any = "";
   currentContext: any;
   lstCli: any = [];
   rdvId: any;
@@ -54,19 +57,21 @@ export class RdvPage {
       { "code": "completed", "lib": "Complet", "color": "secondary" },
     ]
     this.dataMenu = [
-      { "id": 1, "status": "hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage},
-      { "id": 2, "status": "hold", "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage},
-      { "id": 3, "status": "hold", "lib": "Souscription", "icon": "home", "page": SouscriptionPage},
-      { "id": 4, "status": "hold", "lib": "Signatures", "icon": "ribbon", "page": SignaturePage},
+      { "id": 1, "status": "hold", "lib": "Synthèse", "icon": "person", "page": SynthesePage },
+      { "id": 2, "status": "hold", "lib": "Connaissance Client", "icon": "person", "page": DecouvertePage },
+      { "id": 3, "status": "hold", "lib": "Patrimoine", "icon": "home", "page": PatrimoinePage },
+      { "id": 4, "status": "hold", "lib": "Concurrents", "icon": "sign", "page": ConcurrentsPage },
     ]
     this.rdvMenu = [
       { "id": 1, "lib": "Recopier", "icon": "copy", "page": OptionCopierPage },
       { "id": 2, "lib": "Pièces justificatives", "icon": "camera", "page": OptionPiecesPage },
-      { "id": 3, "lib": "Simuler", "icon": "calculator", "page": SimulerPage },
+      { "id": 3, "lib": "Diagnostic Conseil", "icon": "home", "page": DiagConseilPage },
+      { "id": 4, "lib": "Simuler", "icon": "calculator", "page": SimulerPage },
+      { "id": 5, "lib": "Souscription", "icon": "sign", "page": SouscriptionPage },
     ];
     // ===== Events operation on page =====
     events.subscribe('rdvSave', eventData => {
-      this.saveData(eventData[0]);
+      this.saveData(eventData[0]).then(response => { }, error => { });
     });
     events.subscribe('menuStatusChange', eventData => {
       console.log("Update status menu", eventData);
@@ -98,7 +103,7 @@ export class RdvPage {
           clientPrenom: cli['client']['output'][0]['PRENOM'],
           etatVie: cli['client']['output'][0]['ETATVIE'],
           forms: [],
-          docs:[],
+          docs: [],
           rdvStatus: false
         });
       }
@@ -114,8 +119,8 @@ export class RdvPage {
     this.titleRdv = this.currentRdv['clients'][idx]['client']['output'][0]['NOM'];
     this.currentCli = idx;
     //this.currentContext = { "currentPage": null, "currentCli": this.currentCli, "currentDoc": this.currentRdv }
-    this.currentContext = {"currentCli": this.currentCli, "currentDoc": this.currentRdv }
-    console.log("Current Context",this.currentContext);
+    this.currentContext = { "currentCli": this.currentCli, "currentDoc": this.currentRdv }
+    console.log("Current Context", this.currentContext);
     this.events.publish('clientChange', this.currentContext);
   }
   retrieveData(idx) {
@@ -129,23 +134,29 @@ export class RdvPage {
   }
   // Save data in PouchDb locally
   saveData(docPut) {
-    let me = this;
-    console.log("RDV to save in Pouch", docPut);
-    let id = docPut['_id'];
-    this.db.get(id).then(function (docLocal) {
-      //console.log(docLocal);
-      let rev = docLocal['_rev'];
-      let up = { _id: id, _rev: rev, clients: docPut['clients'], rdv: docPut['rdv'] };
-      return me.db.put(up);
-    }).then(function (response) {
-      //console.log(response);
-    }).catch(function (err) {
-      console.error(err);
+    return new Promise((resolve, reject) => {
+      console.log("RDV to save in Pouch", docPut);
+      let id = docPut['_id'];
+      this.db.get(id).then(docLocal => {
+        //console.log(docLocal);
+        let rev = docLocal['_rev'];
+        let up = { _id: id, _rev: rev, clients: docPut['clients'], rdv: docPut['rdv'] };
+        this.db.put(up).then(saveResponse => {
+          console.log(saveResponse);
+          resolve(saveResponse)
+        }, saveError => {
+          console.log(saveError);
+          reject(saveError);
+        });
+      }, error => {
+        console.log(error);
+        reject(error);
+      })
     });
   };
   // Navigation Menu
   callMenu(item) {
-    let modal = Modal.create(item.page,this.currentContext);
+    let modal = Modal.create(item.page, this.currentContext);
     this.nav.present(modal);
     //this.nav.push(item.page,this.currentContext);
   }

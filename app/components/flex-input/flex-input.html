@@ -16,7 +16,7 @@
       </ion-buttons>
     </ion-toolbar>
     <ion-row wrap>
-      <ion-col wrap *ngFor="let key of selectedFields | keys">
+      <ion-col width-33  *ngFor="let key of selectedFields | keys">
         <ion-card>
           <ion-card-header>{{key.key}}</ion-card-header>
           <ion-list>
@@ -32,23 +32,28 @@
                   'ion-md-cloud-upload' : field.type=='urlData'}" (click)="initField(idx, field.model)">
               </ion-icon>
               <ion-label stacked>{{field.title}}</ion-label>
-              <ion-input *ngIf="field.type=='number'" type="number" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"
+              <ion-input clearInput *ngIf="field.type=='number'" type="number" [(ngControl)]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"
                 min="{{field.enum[0]}}" max="{{field.enum[1]}}"></ion-input>
-              <ion-input *ngIf="field.type=='text'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
-                [(ngModel)]="field.value" [required]="field.required" clearInput></ion-input>
-              <ion-input *ngIf="field.type=='date'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
-                [(ngModel)]="field.value" clearInput></ion-input>
-              <ion-input *ngIf="field.type=='tel'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
-                [(ngModel)]="field.value" clearInput></ion-input>
+              <!-- <ion-range *ngIf="field.type=='number'" min="{{field.enum[0]}}" max="{{field.enum[1]}}" pin="true" [(ngControl)]="field.model" name="input_{{field.model}}"
+                [(ngModel)]="field.value">
+                <ion-label range-left>{{field.enum[0]}}</ion-label>
+                <ion-label range-right>{{field.enum[1]}}</ion-label>
+              </ion-range>
+               -->
+              <ion-input clearInput *ngIf="field.type=='text'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
+                [(ngModel)]="field.value" [required]="field.required"></ion-input>
+              <ion-input clearInput *ngIf="field.type=='date'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
+                [(ngModel)]="field.value"></ion-input>
+              <ion-input clearInput *ngIf="field.type=='tel'" type="{{field.type}}" primary [ngControl]="field.model" name="input_{{field.model}}"
+                [(ngModel)]="field.value"></ion-input>
               <ion-input *ngIf="field.type=='email'" type="{{field.type}}" [ngControl]="field.model" primary name="input_{{field.model}}"
-                [(ngModel)]="field.value" clearInput></ion-input>
+                [(ngModel)]="field.value"></ion-input>
               <button outline item-right *ngIf="field.type=='url'" (click)="openSimu(field.default)"><ion-icon name="wifi"></ion-icon> démarrer</button>
               <button outline item-right *ngIf="field.type=='urlData'" (click)="openSimuData(idx,field.model,field.default)"><ion-icon name="wifi"></ion-icon> démarrer</button>
-              <button outline item-right *ngIf="field.type=='urlData'" (click)="getSimuData()"><ion-icon name="wifi"></ion-icon> Voir les resultats</button>
 
               <ion-toggle *ngIf="field.type=='boolean'" checked="false" [ngControl]="field.model" name="input_{{field.model}}" [(ngModel)]="field.value"></ion-toggle>
 
-              <ion-select *ngIf="field.type=='enum'" [(ngModel)]="field.value" [ngControl]="field.model" cancelText="Annuler" okText="Ok">
+              <ion-select clearInput *ngIf="field.type=='enum'" [(ngModel)]="field.value" [ngControl]="field.model" cancelText="Annuler" okText="Ok">
                 <ion-option value="">== Choisir une option ==</ion-option>
                 <ion-option *ngFor="let b of field.enum | objToArray" [value]="b.key">{{b.value}}</ion-option>
               </ion-select>

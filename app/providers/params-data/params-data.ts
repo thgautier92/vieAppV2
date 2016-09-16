@@ -177,7 +177,7 @@ export class ValidationService {
     }
   }
   static numberFormat(control: Control, numLimit?: Array<number>): ValidationResult {
-    console.log("Bornes : ", numLimit);
+    //console.log("Bornes : ", numLimit);
     if (numLimit) {
       if (control.value < numLimit[0] || control.value > numLimit[1]) {
         return { "incorrectNumberFormat": true };

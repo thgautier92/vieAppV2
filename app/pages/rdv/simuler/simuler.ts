@@ -18,7 +18,7 @@ import {ValuesPipe} from '../../../pipes/common';
   pipes: [ValuesPipe]
 })
 export class SimulerPage {
-  popupWindow:any;
+  popupWindow: any;
   lstForms: any = [];
   dataIn: any = {};
   idPage: any = {};
@@ -29,12 +29,12 @@ export class SimulerPage {
   pageStatus: any;
   constructor(private nav: NavController, params: NavParams, private viewCtrl: ViewController, private events: Events, private CalcTools: CalcTools, private simu: Simu) {
     this.params = params;
-    this.popupWindow=null;
+    this.popupWindow = null;
     //this.idPage = this.params.data['currentPage'];
     this.idPage = 3
     this.idClient = this.params.data['currentCli'];
     this.dataIn = this.params.data['currentDoc'];
-    this.dataSimu = { "dateSimu": "","idSimu":"", "data": [] };
+    this.dataSimu = { "dateSimu": "", "idSimu": "", "data": [] };
     this.lstForms = [
       { "id": 6, "status": "" }
     ];
@@ -53,28 +53,21 @@ export class SimulerPage {
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
     this.events.subscribe('rdvSave', eventData => {
-      console.log(eventData);
-      this.idSimu = eventData[0]['rdv']['resultByClient'][this.idClient]['forms'][6]['extraData']['idSimu'];
-      // get data Simu 
-      simu.getSimu(this.idSimu).then(res => {
-        let data = res['results']['output'][0];
-        this.dataSimu = {"idSimu":this.idSimu, "dateSimu": data['datemaj'], "data": JSON.parse(data['dataout']) };
-        //console.log(this.dataSimu);
-        // call dataSave and close windows
-        this.popupWindow.close();
-      });
+      console.log("Data saved", eventData);
+      let extra = eventData[0]['rdv']['resultByClient'][this.idClient]['forms'][6]['extraData'];
+      if (extra) {
+        this.idSimu = extra['idSimu'];
+        let d = extra['simu'];
+        this.dataSimu = { "idSimu": this.idSimu, "dateSimu": d['datemaj'], "data": JSON.parse(d['dataout']) };
+      }
+      if (this.popupWindow) this.popupWindow.close();
     });
-    this.events.subscribe('simuStart',eventData=>{
-      console.log(eventData);
-      this.popupWindow=eventData[1];
-      //console.log(this.popupWindow);
-      this.dataSimu['dateSimu']=eventData[0]['time_stamp'];
-      this.dataSimu['idSimu']=eventData[0]['insert_id'];
-    });
-    this.events.subscribe('simuDataLoaded',eventData=>{
+    this.events.subscribe('simuStart', eventData => {
       //console.log(eventData);
-      this.dataSimu['data']=JSON.parse(eventData[0]['dataout']);
-    })
+      this.popupWindow = eventData[1];
+      this.dataSimu['dateSimu'] = eventData[0]['time_stamp'];
+      this.dataSimu['idSimu'] = eventData[0]['insert_id'];
+    });
   }
   close() {
     this.viewCtrl.dismiss();

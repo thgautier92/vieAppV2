@@ -665,8 +665,8 @@
         },
         {
             "id": 5,
-            "name": "offre2",
-            "title": "Offre 2",
+            "name": "concurrents",
+            "title": "Conccurrents",
             "icon": "body",
             "fields": [
                 {
@@ -826,6 +826,120 @@
                     "readOnly": "false",
                     "error": "",
                     "type": "boolean"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "name": "souscription",
+            "title": "Souscription",
+            "icon": "body",
+            "fields": [
+                {
+                    "group": "Produit",
+                    "model": "fiscalite",
+                    "title": "Fiscalité",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "enum",
+                    "enum": {
+                        "f1": "Fiscalité PEA",
+                        "f2": "Fiscalité Hors PEA"
+                    }
+                },{
+                    "group": "Versement initial",
+                    "model": "vsi_montant",
+                    "title": "Montant",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "number",
+                    "enum": [
+                        1000,
+                        20000
+                    ]
+                },{
+                    "group": "Versement initial",
+                    "model": "vsi_date",
+                    "title": "Date",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "date"
+                },{
+                    "group": "Versement initial",
+                    "model": "vsi_paiement",
+                    "title": "Mode de paiement",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "enum",
+                    "enum": {
+                        "cheque": "Chèque",
+                        "prelevement": "Prélévement",
+                        "virement":"Virement"
+                    }
+                },{
+                    "group": "Versement programmé",
+                    "model": "vsp_montant",
+                    "title": "Montant",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "number",
+                    "enum": [
+                        1000,
+                        10000
+                    ]
+                },{
+                    "group": "Versement programmé",
+                    "model": "vsp_date",
+                    "title": "Date",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "date"
+                },{
+                    "group": "Versement programmé",
+                    "model": "vsp_periodicite",
+                    "title": "Periodicité",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "enum",
+                    "enum": {
+                        "m": "Mensuel",
+                        "t": "Trimestriel",
+                        "s":"Semestriel",
+                        "a":"Annuel"
+                    }
+                },{
+                    "group": "mandat SEPA",
+                    "model": "sepa_iban",
+                    "title": "IBAN",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "text"
+                }
+                ,{
+                    "group": "mandat SEPA",
+                    "model": "sepa_bic",
+                    "title": "BIC",
+                    "default": "",
+                    "required": "false",
+                    "readOnly": "false",
+                    "error": "",
+                    "type": "text"
                 }
             ]
         }

@@ -30,8 +30,7 @@ export class SouscriptionPage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 5, "status": "" },
-      { "id": 6, "status": "" }
+      { "id": 11, "status": "" },
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {

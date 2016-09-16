@@ -1,5 +1,5 @@
 import { Component, Input} from '@angular/core';
-import { Page, NavController, NavParams, Events } from 'ionic-angular';
+import { Page, NavController, NavParams, Events, Modal } from 'ionic-angular';
 import {CalcTools} from '../../comon/calculate'
 import {FlexInput} from '../../../components/flex-input/flex-input';
 
@@ -10,11 +10,11 @@ import {FlexInput} from '../../../components/flex-input/flex-input';
   Ionic pages and navigation.
 */
 @Component({
-  templateUrl: 'build/pages/rdv/decouverte/decouverte.html',
+  templateUrl: 'build/pages/rdv/concurrents/concurrents.html',
   directives: [FlexInput],
   providers: [CalcTools],
 })
-export class DecouvertePage {
+export class ConcurrentsPage {
   lstForms: any = [];
   dataIn: any = {};
   idPage: any = {};
@@ -22,6 +22,7 @@ export class DecouvertePage {
   dataOut: any = {};
   params: NavParams;
   pageStatus: any;
+  lstConccurrents:any;
   constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
@@ -30,8 +31,9 @@ export class DecouvertePage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 2, "status": "" }
+      { "id": 1, "status": "" },
     ];
+    this.lstConccurrents=[];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
       this.idClient = eventData[0]['currentCli'];
@@ -47,4 +49,7 @@ export class DecouvertePage {
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
   }
+  addItem(){}
+  removeItem(){}
+    
 }

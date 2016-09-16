@@ -26,18 +26,18 @@ export class FlexInput implements AfterViewInit, OnChanges {
   form: any;
   selectedForm: any;
   selectedFields: any;
-  dataNonInput: any = {};
-  popupWindow: any;
+  dataNonInput: any = {};     // data added outside the generic form
+  popupWindow: any = null;    // windows object, open for simulation
+  simuExec: boolean = false;  // flag for exec simulation 
   @Input() idPage: any;
   @Input() idMenu: any;
   @Input() dataIn: any;
   @Input() idClient: any;
   constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private simu: Simu, private events: Events) {
     this.form = this.fb.group({});
-    this.popupWindow = null;
   }
   ngAfterViewInit() {
-    console.log("!! Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
+    //console.log("!! Data passed to component : ", this.idPage, this.idMenu, this.dataIn, this.idClient);
     this.dataCurrent = this.dataIn;
     this.loadForm(this.dataIn['clients'][this.idClient]['client']['output'][0]);
   };
@@ -114,9 +114,21 @@ export class FlexInput implements AfterViewInit, OnChanges {
         value: question['_value']
       });
     }
-    let dForm = { form: this.selectedForm['title'], status: formStatus, formInput: fForm, extraData: this.dataNonInput };
+    let dForm = { "form": this.selectedForm['title'], "status": formStatus, "formInput": fForm,"extraData": this.dataNonInput};
     this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
-    this.events.publish('rdvSave', this.dataIn);
+    if (this.simuExec) {
+      this.simu.getSimu(this.dataNonInput['idSimu']).then(data => {
+        console.log("GET SIMU DATA", data);
+        this.dataNonInput['simu'] = data['results']['output'][0];
+        dForm['extraData'] = this.dataNonInput;
+        this.dataIn['rdv']['resultByClient'][this.idClient]['forms'][this.selectedForm.id] = dForm;
+        this.events.publish('rdvSave', this.dataIn);
+      }, error => {
+        console.log(error);
+      })
+    } else {
+      this.events.publish('rdvSave', this.dataIn);
+    }
     this.events.publish('rdvStatus_' + this.idPage, { idPage: this.idPage, form: this.selectedForm, status: formStatus });
   }
   // ===== External Simulator with params ====
@@ -140,6 +152,7 @@ export class FlexInput implements AfterViewInit, OnChanges {
     let rdvId = this.dataCurrent['rdv']['rdvId'];
     this.simu.callSimu({ "rdvId": rdvId, "dataIn": this.dataCurrent }).then(data => {
       //console.log("Data from simu",data)
+      me.simuExec = true;
       url = data['urlNext'];
       me.dataNonInput['idSimu'] = data['insert_id'];
       let idField = idx;
@@ -150,22 +163,12 @@ export class FlexInput implements AfterViewInit, OnChanges {
         this.popupWindow = window.open(url, "SIMU", options);
         this.popupWindow.focus();
       }
-     me.events.publish("simuStart", data, this.popupWindow);
+      me.events.publish("simuStart", data, this.popupWindow);
     }, error => {
       console.log(error);
+      me.simuExec = false;
     });
   }
-  getSimuData() {
-     let me = this;
-    this.simu.getSimu(this.dataNonInput['idSimu']).then(data => {
-      console.log(data);
-      me.dataNonInput['simu']=data['results']['output'][0];
-      this.events.publish("simuDataLoaded", data['results']['output'][0]);
-    }, error => {
-      console.log(error);
-    })
-  }
-
   onSubmit() {
     //console.log("Submit Form", this.form);
   }

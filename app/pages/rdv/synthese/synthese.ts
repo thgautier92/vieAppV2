@@ -10,11 +10,11 @@ import {FlexInput} from '../../../components/flex-input/flex-input';
   Ionic pages and navigation.
 */
 @Component({
-  templateUrl: 'build/pages/rdv/decouverte/decouverte.html',
+  templateUrl: 'build/pages/rdv/synthese/synthese.html',
   directives: [FlexInput],
   providers: [CalcTools],
 })
-export class DecouvertePage {
+export class SynthesePage {
   lstForms: any = [];
   dataIn: any = {};
   idPage: any = {};
@@ -30,7 +30,7 @@ export class DecouvertePage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 2, "status": "" }
+      { "id": 1, "status": "" },
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
