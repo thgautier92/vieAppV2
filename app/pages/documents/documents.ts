@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import {Paramsdata} from '../../providers/params-data/params-data';
+import {File} from 'ionic-native';
 
 /*
   Generated class for the DocumentsPage page.
