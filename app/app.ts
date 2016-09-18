@@ -6,6 +6,8 @@ import {HomePage} from './pages/home/home';
 import {AuthPage} from './pages/auth/auth';
 import {SynchroPage} from './pages/synchro/synchro';
 import {SignApiPage} from './pages/sign-api/sign-api';
+import {StartPage} from './pages/start/start';
+import {DocumentsPage} from './pages/documents/documents';
 
 
 @Component({
@@ -36,8 +38,10 @@ class MyApp {
     // set our app's pages
     this.pages = [
       { title: 'Acceuil', component: HomePage, icon: "home" },
+       { title: 'Rendez-vous', component: StartPage, icon: "people" },
       { title: 'Synchronisation', component: SynchroPage, icon: "sync" },
-      { title: 'Outil de signature', component: SignApiPage, icon: "pencil" }
+      { title: 'Espace Documentaire', component: DocumentsPage, icon: "albums" },
+      { title: 'Outil de signature', component: SignApiPage, icon: "bug" }
     ];
   }
 

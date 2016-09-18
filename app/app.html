@@ -5,12 +5,14 @@
 
   <ion-content>
     <ion-list>
+      
       <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
+         <ion-icon item-left name="{{p.icon}}"></ion-icon>
         {{p.title}}
       </button>
       <ion-item-divider primary>Votre compte : {{userData['name']}}</ion-item-divider>
-      <button ion-item *ngIf="!isAut" (click)="connect()">Connexion</button>
-      <button ion-item *ngIf="isAut" (click)="disConnect()">Déconnexion</button>
+      <button ion-item *ngIf="!isAut" (click)="connect()"><ion-icon item-left name="log-in"></ion-icon>Connexion</button>
+      <button ion-item *ngIf="isAut" (click)="disConnect()"><ion-icon item-left name="log-out"></ion-icon>Déconnexion</button>
     </ion-list>
   </ion-content>
 

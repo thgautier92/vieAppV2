@@ -136,7 +136,7 @@ export class RdvPage {
   // Save data in PouchDb locally
   saveData(docPut) {
     return new Promise((resolve, reject) => {
-      console.log("==> SAVE : RDV is being saved in Pouch", docPut);
+      console.log("==> SAVE : RDV is being saved in Pouch : ", docPut);
       let id = docPut['_id'];
       this.db.get(id).then(docLocal => {
         //console.log(docLocal);
@@ -160,7 +160,6 @@ export class RdvPage {
     let okEnd = true;
     let invalid = [];
     for (let m of this.dataMenu) {
-      console.log(m);
       if (m['status'] !== "completed") {
         invalid.push(m['lib']);
         okEnd = false;

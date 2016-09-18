@@ -63,6 +63,7 @@ export class StartPage {
   start(item){
     // start the RDV with data
     console.log(item);
+    item['doc']['rdvEnded']=false;
     this.nav.setRoot(RdvPage,{base:this.base,rdvId:item.id});
   }
 }
