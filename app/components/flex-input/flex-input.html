@@ -7,7 +7,7 @@
 <div>
   <form *ngIf="okForm" (ngSubmit)="onSubmit()" [(ngFormModel)]="form" class="css-form">
     <ion-toolbar light position="top">
-      <ion-title start>{{selectedForm.title}}</ion-title>
+      <ion-title start>{{formTitle}}</ion-title>
       <ion-buttons end>
         <!--<button>Etat de votre saisie : {{menuCurrent.status}}</button> -->
         <button danger (click)="diagNext('hold',$event)"><ion-icon name="square"></ion-icon></button>
@@ -57,7 +57,7 @@
                 <ion-option value="">== Choisir une option ==</ion-option>
                 <ion-option *ngFor="let b of field.enum | objToArray" [value]="b.key">{{b.value}}</ion-option>
               </ion-select>
-              <!-- <div class="errorMessage" *ngIf="isValid(field.model)">{{field.title}} is required</div> -->
+              <!-- <div class="errorMessage" *ngIf="isValid(field.model)">{{field.title}} est invalide</div> -->
             </ion-item>
           </ion-list>
         </ion-card>

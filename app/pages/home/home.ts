@@ -23,8 +23,9 @@ export class HomePage {
     this.userData = params.data;
     this.display = display;
     this.items = [
-      { 'title': 'Go !', 'icon': 'loi-madelin-contact1-370x192.jpg', 'description': "Démarrer un RDV", 'link': StartPage, 'color': this.display.getRandomColor() },
+      { 'title': 'Go !', 'icon': 'rdv.jpg', 'description': "Démarrer un RDV", 'link': StartPage, 'color': this.display.getRandomColor() },
       { 'title': 'Découvrir', 'icon': 'regime_retraite_complementaire.jpg', 'description': "Découvrir les offres", 'link': StartPage, 'color': this.display.getRandomColor() },
+      { 'title': 'Documents', 'icon': 'documents.jpg', 'description': "La base documentaire", 'link': StartPage, 'color': this.display.getRandomColor() },
     ]
   }
   openNavDetailsPage(item) {

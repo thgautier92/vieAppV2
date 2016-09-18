@@ -36,7 +36,7 @@ export class SimulerPage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataSimu = { "dateSimu": "", "idSimu": "", "data": [] };
     this.lstForms = [
-      { "id": 6, "status": "" }
+      { "id": 6, "title":"","pres": "detail", "status": "" }
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
@@ -53,7 +53,7 @@ export class SimulerPage {
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
     this.events.subscribe('rdvSave', eventData => {
-      console.log("Data saved", eventData);
+      //console.log("Data saved", eventData);
       let extra = eventData[0]['rdv']['resultByClient'][this.idClient]['forms'][6]['extraData'];
       if (extra) {
         this.idSimu = extra['idSimu'];

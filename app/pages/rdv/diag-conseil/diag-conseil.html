@@ -6,5 +6,8 @@
 -->
 
 <ion-content padding class="diag-conseil">
-  <flex-input *ngFor="let f of lstForms" [idPage]=idPage [idMenu]=f.id [dataIn]=dataIn [idClient]=idClient></flex-input>
+  <div *ngFor="let f of lstForms">
+    <flex-list *ngIf="f.pres=='list'" [idPage]=idPage [idForm]=f.id [formTitle]=f.title [dataIn]=dataIn [idClient]=idClient></flex-list>
+    <flex-input *ngIf="f.pres=='detail'" [idPage]=idPage [idMenu]=f.id [formTitle]=f.title [dataIn]=dataIn [idClient]=idClient></flex-input>
+  </div>
 </ion-content>

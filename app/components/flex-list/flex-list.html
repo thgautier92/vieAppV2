@@ -5,16 +5,18 @@
   for more info on Angular 2 Components.
 -->
 <div>
-  <ion-toolbar position="top">
-      <ion-title start>{{menuCurrent.lib}}</ion-title>
-      <ion-buttons end>
-        <!--<button>Etat de votre saisie : {{menuCurrent.status}}</button> -->
-        <button outline primary (click)="addItem()"><ion-icon name="add-circle"></ion-icon> Ajouter</button>
-        <button danger (click)="diagNext('hold',$event)"><ion-icon name="square"></ion-icon></button>
-        <button favorite (click)="diagNext('partial',$event)"><ion-icon name="pause"></ion-icon></button>
-        <button secondary (click)="diagNext('completed',$event)"><ion-icon name="play"></ion-icon></button>
-      </ion-buttons>
-    </ion-toolbar>
+  <ion-toolbar light position="top">
+    <ion-title start>{{formTitle}}</ion-title>
+    <ion-buttons end>
+      <!--<button>Etat de votre saisie : {{menuCurrent.status}}</button> -->
+      <button outline primary (click)="addItem()"><ion-icon name="add-circle"></ion-icon> Ajouter</button>
+    </ion-buttons>
+    <ion-buttons *ngIf="addedForm" end>
+      <button danger (click)="diagNext('hold',$event)"><ion-icon name="square"></ion-icon></button>
+      <button favorite (click)="diagNext('partial',$event)"><ion-icon name="pause"></ion-icon></button>
+      <button secondary (click)="diagNext('completed',$event)"><ion-icon name="play"></ion-icon></button>
+    </ion-buttons>
+  </ion-toolbar>
   <ion-list>
     <ion-item-sliding *ngFor="let item of list; let idx=index">
       <ion-item>

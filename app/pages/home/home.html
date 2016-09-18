@@ -15,9 +15,14 @@
 
 <ion-content padding class="home">
   <!-- <button primary menuToggle>Menus</button> -->
-  <ion-card *ngFor="let item of items" (click)="openNavDetailsPage(item)">
-    <img src="img/{{item.icon}}" />
-    <div class="card-title">{{item.title}}</div>
-    <div class="card-subtitle">{{item.description}}</div>
-  </ion-card>
+  <h1 primary text-center>Bienvenue dans l'Ultra Mobilité</h1>
+  <ion-row center wrap>
+    <ion-col center *ngFor="let item of items">
+      <ion-card (click)="openNavDetailsPage(item)">
+        <ion-img src="img/{{item.icon}}"></ion-img>
+        <div class="card-title">{{item.title}}</div>
+        <div class="card-subtitle">{{item.description}}</div>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 </ion-content>

@@ -12,7 +12,7 @@ import {FlexList} from '../../../components/flex-list/flex-list';
 */
 @Component({
   templateUrl: 'build/pages/rdv/concurrents/concurrents.html',
-  directives: [FlexInput,FlexList],
+  directives: [FlexInput, FlexList],
   providers: [CalcTools],
 })
 export class ConcurrentsPage {
@@ -23,7 +23,7 @@ export class ConcurrentsPage {
   dataOut: any = {};
   params: NavParams;
   pageStatus: any;
-  lstConccurrents:any;
+  lstConccurrents: any;
   constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
@@ -32,9 +32,10 @@ export class ConcurrentsPage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 100, "status": "" }
+      { "id": 100, "title":"Concurrents","pres": "list", "status": "" },
+      { "id": 2, "title":"","pres": "detail", "status": "" }
     ];
-    
+
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
       this.idClient = eventData[0]['currentCli'];
@@ -42,14 +43,13 @@ export class ConcurrentsPage {
       for (var key in this.lstForms) { this.lstForms[key]['status'] = ""; }
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
-    this.events.subscribe('rdvStatus_'+this.idPage, dataReturn => {
-      console.log("Update status form", this.lstForms, dataReturn);
+    this.events.subscribe('rdvStatus_' + this.idPage, dataReturn => {
+      //console.log("Update status form", this.lstForms, dataReturn);
       let idForm = dataReturn[0]['form']['id'];
       let f = this.lstForms.filter(item => item['id'] === idForm);
-      console.log(idForm,f);
       f[0]['status'] = dataReturn[0]['status'];
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
   }
-    
+
 }

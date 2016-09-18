@@ -1,5 +1,5 @@
 import { Component, Input} from '@angular/core';
-import { Page, NavController, NavParams, Events } from 'ionic-angular';
+import { Page, NavController, ViewController, NavParams, Events } from 'ionic-angular';
 import {CalcTools} from '../../comon/calculate'
 import {FlexInput} from '../../../components/flex-input/flex-input';
 
@@ -22,7 +22,7 @@ export class SouscriptionPage {
   dataOut: any = {};
   params: NavParams;
   pageStatus: any;
-  constructor(private nav: NavController, params: NavParams, private events: Events, private CalcTools: CalcTools) {
+  constructor(private nav: NavController, params: NavParams, private viewCtrl: ViewController, private events: Events, private CalcTools: CalcTools) {
     this.params = params;
     //this.idPage = this.params.data['currentPage'];
     this.idPage = 4
@@ -30,7 +30,7 @@ export class SouscriptionPage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 11, "status": "" },
+      { "id": 11, "title":"","pres": "detail", "status": "" }
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
@@ -39,13 +39,16 @@ export class SouscriptionPage {
       for (var key in this.lstForms) { this.lstForms[key]['status'] = ""; }
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
-    this.events.subscribe('rdvStatus_'+this.idPage, dataReturn => {
-      console.log("Update status form", this.lstForms, dataReturn);
+    this.events.subscribe('rdvStatus_' + this.idPage, dataReturn => {
+      //console.log("Update status form", this.lstForms, dataReturn);
       let idForm = dataReturn[0]['form']['id'];
       let f = this.lstForms.filter(item => item['id'] === idForm);
       f[0]['status'] = dataReturn[0]['status'];
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
-     
+
+  }
+  close() {
+    this.viewCtrl.dismiss();
   }
 }

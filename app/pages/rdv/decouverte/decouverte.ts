@@ -30,7 +30,7 @@ export class DecouvertePage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 2, "status": "" }
+      { "id": 2, "title": "", "pres": "detail", "status": "" }
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
@@ -39,8 +39,8 @@ export class DecouvertePage {
       for (var key in this.lstForms) { this.lstForms[key]['status'] = ""; }
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
-    this.events.subscribe('rdvStatus_'+this.idPage, dataReturn => {
-      console.log("Update status form", this.lstForms, dataReturn);
+    this.events.subscribe('rdvStatus_' + this.idPage, dataReturn => {
+      //console.log("Update status form", this.lstForms, dataReturn);
       let idForm = dataReturn[0]['form']['id'];
       let f = this.lstForms.filter(item => item['id'] === idForm);
       f[0]['status'] = dataReturn[0]['status'];

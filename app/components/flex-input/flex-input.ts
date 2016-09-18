@@ -34,6 +34,7 @@ export class FlexInput implements OnInit, OnChanges {
   @Input() idMenu: any;
   @Input() dataIn: any;
   @Input() idClient: any;
+  @Input() formTitle: any;
   constructor(private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private simu: Simu, private events: Events) {
     this.form = this.fb.group({});
   }
@@ -45,6 +46,7 @@ export class FlexInput implements OnInit, OnChanges {
       console.log("==> Form created", response);
       this.form = response['formGroup'];
       this.selectedForm = response['selectedForm'];
+      if(this.formTitle=="") this.formTitle=this.selectedForm['title'];
       this.selectedFields = response['selectedFields'];
       this.okForm = true;
     }, error => {
@@ -60,9 +62,9 @@ export class FlexInput implements OnInit, OnChanges {
       this.dataCurrent = this.dataIn;
     }
     this.loadForm(this.idMenu, this.dataIn['clients'][this.idClient]['client']['output'][0]).then(response => {
-      console.log(response);
       this.form = response['formGroup'];
       this.selectedForm = response['selectedForm'];
+      if(this.formTitle=="") this.formTitle=this.selectedForm['title'];
       this.selectedFields = response['selectedFields'];
       this.okForm = true;
     }, error => {
@@ -183,6 +185,9 @@ export class FlexInput implements OnInit, OnChanges {
   }
   onSubmit() {
     //console.log("Submit Form", this.form);
+  }
+  isValid(ctrl) {
+    console.log(ctrl);
   }
 }
 // ===== Validators method ===================

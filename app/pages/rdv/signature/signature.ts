@@ -32,7 +32,7 @@ export class SignaturePage {
     this.dataIn = this.params.data['currentDoc'];
     this.dataOut = {};
     this.lstForms = [
-      { "id": 7, "status": "" }
+      { "id": 7, "title":"","pres": "detail", "status": "" }
     ];
     // Return events from inputs forms
     this.events.subscribe('clientChange', eventData => {
@@ -42,7 +42,7 @@ export class SignaturePage {
       CalcTools.calcPageStatus(this.idPage, this.lstForms);
     });
     this.events.subscribe('rdvStatus_' + this.idPage, dataReturn => {
-      console.log("Update status form", this.lstForms, dataReturn);
+      //console.log("Update status form", this.lstForms, dataReturn);
       let idForm = dataReturn[0]['form']['id'];
       let f = this.lstForms.filter(item => item['id'] === idForm);
       console.log("Search Form status", f);

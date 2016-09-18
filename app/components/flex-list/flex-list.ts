@@ -22,15 +22,17 @@ export class FlexList {
   menuCurrent: any = {};
   list: any = [];
   form: any;
-  selectedForm: any;
+  addedForm: boolean = false;
+  selectedForm: any = null;
   selectedFields: any;
   @Input() idPage: any;
   @Input() idForm: any;
   @Input() dataIn: any;
   @Input() idClient: any;
+  @Input() formTitle: any;
   constructor(private viewCtrl: ViewController, private nav: NavController, private platform: Platform, private fb: FormBuilder, private paramsApi: Paramsdata, private events: Events) {
   }
-  nbOnInit() {
+  ngOnInit() {
     console.log("!! Data passed to component : ", this.idPage, this.idForm, this.dataIn, this.idClient);
     this.list = [];
   };
@@ -39,7 +41,9 @@ export class FlexList {
     modal.onDismiss(data => {
       if (data) {
         this.selectedForm = data['form'];
+        if(this.formTitle=="") this.formTitle=this.selectedForm['title'];
         this.list.push(data['value']);
+        this.addedForm = true;
       }
     });
     this.nav.present(modal);
@@ -48,7 +52,7 @@ export class FlexList {
     this.list.splice(idx, 1);
   }
   diagNext(formStatus, evt) {
-    //console.log("Save data form", this.form.controls, this.selectedForm['fields']);
+    console.log("Save data form", this.form, this.selectedForm);
     //console.log("Click event",evt);
     this.menuCurrent.status = formStatus;
     let dForm = { "form": this.selectedForm['title'], "status": formStatus, "formInput": this.list };
