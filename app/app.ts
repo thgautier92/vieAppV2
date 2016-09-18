@@ -19,7 +19,7 @@ class MyApp {
 
   // make HelloIonicPage the root (or first) page
   rootPage: any = HomePage;
-  pages: Array<{ title: string, component: any, icon: any }>;
+  pages: Array<{ title: string, component: any, icon: any,color:any }>;
   isAut: boolean = false;
   userData: any = {};
 
@@ -37,11 +37,11 @@ class MyApp {
     });
     // set our app's pages
     this.pages = [
-      { title: 'Acceuil', component: HomePage, icon: "home" },
-       { title: 'Rendez-vous', component: StartPage, icon: "people" },
-      { title: 'Synchronisation', component: SynchroPage, icon: "sync" },
-      { title: 'Espace Documentaire', component: DocumentsPage, icon: "albums" },
-      { title: 'Outil de signature', component: SignApiPage, icon: "bug" }
+      { title: 'Acceuil', component: HomePage, icon: "home", color:"light" },
+       { title: 'Rendez-vous', component: StartPage, icon: "people", color:"primary" },
+      { title: 'Synchronisation', component: SynchroPage, icon: "sync", color:"danger" },
+      { title: 'Espace Documentaire', component: DocumentsPage, icon: "albums", color:"action" },
+      { title: 'Outil de signature', component: SignApiPage, icon: "bug", color:"secondary" }
     ];
   }
 

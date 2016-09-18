@@ -26,12 +26,31 @@ export class Paramsdata {
   paramsForm: any = null;
   dataMenu: any = null;
   dataForms: any = null;
+  dataDocs: any = null;
   fb: FormBuilder;
   constructor(public http: Http, fb: FormBuilder) {
     this.local = new Storage(LocalStorage);
     this.keyStore = "dataForms";
     this.fb = fb;
     this.dataForms = [];
+  }
+  loadDocs() {
+    if (this.dataDocs) {
+      // already loaded paramsForm
+      return Promise.resolve(this.dataDocs);
+    }
+    // don't have the paramsForm yet
+    return new Promise(resolve => {
+      this.http.get('data/docs.json')
+        .map(res => res.json())
+        .subscribe(data => {
+          this.dataDocs = data['docs'];
+          resolve(this.dataDocs);
+        });
+    });
+  }
+  loadFile(file){
+    if (file!=="") window.open("data/docs/"+file,"_blank");
   }
   loadMenu() {
     if (this.dataMenu) {
@@ -88,13 +107,13 @@ export class Paramsdata {
             } else {
               switch (question['type']) {
                 case "number":
-                  modelValue=0
+                  modelValue = 0
                   break;
                 case "boolean":
-                  modelValue=false;
+                  modelValue = false;
                   break;
                 default:
-                  modelValue='';
+                  modelValue = '';
               }
             }
             let field = question['model'];
